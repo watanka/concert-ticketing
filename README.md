@@ -10,7 +10,17 @@
 ```bash
 ```
 
+### 기술스택
+- **개발환경**: Intellij CE
+- **WebFramework**: Spring Boot
+- **DB**: MySQL
+- **ORM**: Spring Data JPA
+- **Test Framework**: JUnit, Mockito
+- **DistributedLock**: Jedis
+- **MessageBroker**: Redis(대기열), Kafka(메세지큐)
+
 ### 요구사항 정의
+[요구사항분석](assets/docs/요구사항분석.md)  
 - 토큰 발급/조회: 예약서비스에 접근하기 위해 토큰을 부여받고 입장순서를 기다립니다. 
 - 콘서트 조회: 콘서트 날짜와 좌석을 조회합니다.
 - 좌석 예약: 좌석 예약을 요청합니다.
@@ -18,10 +28,14 @@
 - 결제: 예약에 대한 결제를 요청합니다.
 
 ### 도메인 구성
-- 콘서트
-- 예약
-- 대기열
-- 포인트
+[ERD](assets/docs/ERD.md)  
+- Concert
+- Ticket
+- User
+- Point
+- WaitingQueue
+
+
 
 
 ### 아키텍쳐
@@ -33,8 +47,6 @@
   
   - 이 두 아키텍쳐의 장점을 섞어서 layered + clean architecture를 채택했습니다.
   - 도메인 영역을 순수하게 보존하기 위해 의존성 역전을 위한 인터페이스를 추가하였습니다.
-  ![img.png](assets/layered_architecture.png)
-  - ![img.png](assets/clean_architecture.png)
 ```
 
 ```
@@ -45,10 +57,14 @@
 
 
 ### API 명세
-
+[api 디자인](assets/docs/api 디자인.md)  
+- 도메인별 API 디자인  
+   
 
 ### Mock API
 - API Spec이 정해지고 난 후에는 다른 동료들이 사용할 수 있도록 Mock API를 배포합니다.
   - 아직 구체적이지 않을 수 있는 API Spec에 대해서 구체적인 예시들을 MockAPI를 통해 제공함으로써 같은 이해선상에 있을 수 있도록 합니다.
   - 다른 동료들의 산출물과 통합할 때 생길 수 있는 문제들을 최소화할 수 있도록 합니다.
+
+
 

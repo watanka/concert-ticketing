@@ -2,7 +2,7 @@ package hhplus.ticketing.domain.concert.components;
 
 import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.ShowTime;
-import hhplus.ticketing.domain.concert.repository.ConcertRepository;
+import hhplus.ticketing.domain.concert.infra.MemoryConcertRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConcertReader {
 
-    private final ConcertRepository repository;
+    private final MemoryConcertRepository repository;
 
     public List<Concert> getConcertList(){
         return repository.getConcertList();
@@ -31,7 +31,6 @@ public class ConcertReader {
 
     public List<ShowTime> getShowTimeList(long concertId) {
         return repository.getShowTimeListByConcertId(concertId);
-
 
     }
 }

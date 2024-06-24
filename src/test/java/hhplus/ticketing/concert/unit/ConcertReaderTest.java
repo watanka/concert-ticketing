@@ -4,7 +4,7 @@ import hhplus.ticketing.domain.concert.components.ConcertReader;
 import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.ShowTime;
-import hhplus.ticketing.domain.concert.repository.ConcertRepository;
+import hhplus.ticketing.domain.concert.infra.MemoryConcertRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 public class ConcertReaderTest {
 
-    private ConcertRepository repository = new ConcertRepository();
+    private MemoryConcertRepository repository = new MemoryConcertRepository();
     private ConcertReader concertReader = new ConcertReader(repository);
 
     @BeforeEach

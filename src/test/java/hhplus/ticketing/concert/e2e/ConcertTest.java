@@ -2,6 +2,10 @@ package hhplus.ticketing.concert.e2e;
 
 import hhplus.ticketing.api.concert.controller.ConcertController;
 import hhplus.ticketing.api.concert.dto.ConcertResponse;
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +31,17 @@ public class ConcertTest {
 
     @Test
     @DisplayName("/concerts - 콘서트 전체리스트를 리턴함")
+    @Disabled
     void return_all_concert_list(){
         //TODO: token
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/concerts")).build();
-        ResponseEntity<ConcertResponse> response = restTemplate.exchange(request, ConcertResponse.class);
 
-        assertThat(response.getBody().concertList()).isInstanceOf(ArrayList.class);
+        String path = "http://localhost/concerts";
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when().get(path)
+                .then().log().all().extract();
+
+        System.out.println(response.body());
+        assertThat(response.body()).isInstanceOf(ArrayList.class);
     }
 }

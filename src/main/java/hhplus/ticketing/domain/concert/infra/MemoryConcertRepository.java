@@ -2,6 +2,8 @@ package hhplus.ticketing.domain.concert.infra;
 
 import com.github.ansell.jdefaultdict.JDefaultDict;
 import hhplus.ticketing.domain.concert.models.Concert;
+import hhplus.ticketing.domain.concert.models.Seat;
+import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.concert.models.ShowTime;
 import hhplus.ticketing.domain.concert.repository.ConcertRepositoryInterface;
 
@@ -14,6 +16,7 @@ public class MemoryConcertRepository implements ConcertRepositoryInterface {
     Map<Long, Concert> concertMap = new HashMap<>();
     Map<Long, List<ShowTime>> showTimeMap = new JDefaultDict<>(k -> new ArrayList<>());
 
+    Map<Long, List<Seat>> seatMap = new JDefaultDict<>(k -> new ArrayList<>());
 
 
     @Override
@@ -43,4 +46,21 @@ public class MemoryConcertRepository implements ConcertRepositoryInterface {
     public List<ShowTime> getShowTimeListByConcertId(long concertId) {
         return showTimeMap.getOrDefault(concertId, null);
     }
+
+    @Override
+    public Seat saveSeat(long showTimeId, Seat seat) {
+        List<Seat> seatList = seatMap.get(showTimeId);
+        seatList.add(seat);
+        return seat;
+    }
+
+    @Override
+    public List<Seat> getAvailableSeatList(long showTimeId) {
+        List<Seat> seatList = seatMap.get(showTimeId);
+        return seatList.stream()
+                .filter(s -> s.getStatus() == SeatStatus.AVAILABLE)
+                .toList();
+    }
+
+
 }

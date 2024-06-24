@@ -1,16 +1,16 @@
 package hhplus.ticketing.concert.unit;
 
 import hhplus.ticketing.domain.concert.components.ConcertReader;
-import hhplus.ticketing.domain.concert.models.Concert;
-import hhplus.ticketing.domain.concert.models.ConcertHall;
-import hhplus.ticketing.domain.concert.models.ShowTime;
+import hhplus.ticketing.domain.concert.models.*;
 import hhplus.ticketing.domain.concert.infra.MemoryConcertRepository;
+import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class ConcertReaderTest {
@@ -56,6 +56,25 @@ public class ConcertReaderTest {
     void list_all_showtimes(){
         Assertions.assertThat(concertReader.getShowTimeList(1).get(0).getConcertHall())
                 .isEqualTo(ConcertHall.JAMSIL);
+    }
+
+    @Test
+    @DisplayName("예매가능한 좌석을 반환한다.")
+    void list_available_seats(){
+        for (int i=0; i<10;i++) {
+            Seat seat = new Seat(i, 1, 1, SeatStatus.AVAILABLE);
+            if (i>=5){
+                seat.updateStatus(SeatStatus.RESERVED);
+            }
+            concertReader.registerSeat(1, seat);
+        }
+
+        List<Seat> seatList = concertReader.getAvailableSeats(1);
+        Assertions.assertThat(seatList.size()).isEqualTo(5);
+        for (Seat seat : seatList) {
+            Assertions.assertThat(seat.getStatus()).isEqualTo(SeatStatus.AVAILABLE);
+        }
+
     }
 
 

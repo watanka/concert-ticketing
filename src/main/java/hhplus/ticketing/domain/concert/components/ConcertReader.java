@@ -20,26 +20,19 @@ public class ConcertReader {
         return repository.getConcertList();
     }
 
-    public Concert registerConcert(Concert concert){
-        return repository.saveConcert(concert);
-    }
+
 
     public Concert getConcert(long concertId) {
         return repository.findConcertById(concertId);
     }
 
-    public ShowTime registerShowTime(long concertId, ShowTime showTime){
-        return repository.saveShowTime(concertId, showTime);
-    }
+
 
     public List<ShowTime> getShowTimeList(long concertId) {
         return repository.getShowTimeListByConcertId(concertId);
 
     }
 
-    public Seat registerSeat(long showTimeId, Seat seat) {
-        return repository.saveSeat(showTimeId, seat);
-    }
 
     public List<Seat> getAvailableSeats(long concertId) {
         return repository.getAvailableSeatList(concertId);

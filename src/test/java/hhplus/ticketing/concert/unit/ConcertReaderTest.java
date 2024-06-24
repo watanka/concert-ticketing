@@ -1,6 +1,7 @@
 package hhplus.ticketing.concert.unit;
 
 import hhplus.ticketing.domain.concert.components.ConcertReader;
+import hhplus.ticketing.domain.concert.components.ConcertWriter;
 import hhplus.ticketing.domain.concert.models.*;
 import hhplus.ticketing.domain.concert.infra.MemoryConcertRepository;
 import org.assertj.core.api.Assert;
@@ -17,13 +18,14 @@ public class ConcertReaderTest {
 
     private MemoryConcertRepository repository = new MemoryConcertRepository();
     private ConcertReader concertReader = new ConcertReader(repository);
+    private ConcertWriter concertWriter = new ConcertWriter(repository);
 
     @BeforeEach
     void setUp(){
         long concertId = 1;
 
         Concert concert = new Concert(concertId, "뉴진스 단독 콘서트", "뉴진스");
-        concertReader.registerConcert(concert);
+        concertWriter.registerConcert(concert);
 
 
         long showTimeId = 1;
@@ -31,7 +33,7 @@ public class ConcertReaderTest {
         ConcertHall jamsilConcertHall = ConcertHall.JAMSIL;
 
         ShowTime showTime = new ShowTime(showTimeId, concertId, time, jamsilConcertHall);
-        concertReader.registerShowTime(concertId, showTime);
+        concertWriter.registerShowTime(concertId, showTime);
 
     }
 
@@ -66,7 +68,7 @@ public class ConcertReaderTest {
             if (i>=5){
                 seat.updateStatus(SeatStatus.RESERVED);
             }
-            concertReader.registerSeat(1, seat);
+            concertWriter.registerSeat(1, seat);
         }
 
         List<Seat> seatList = concertReader.getAvailableSeats(1);

@@ -10,6 +10,7 @@ public class User {
 
     public User(long userId) {
         this.userId = userId;
+        this.balance = 0;
     }
 
     public void rechargePoint(long pointAmount) {

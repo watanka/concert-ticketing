@@ -64,7 +64,10 @@ public class ConcertReaderTest {
     @DisplayName("예매가능한 좌석을 반환한다.")
     void list_available_seats(){
         for (int i=0; i<10;i++) {
-            Seat seat = new Seat(i, 1, SeatStatus.AVAILABLE);
+            Seat seat = new Seat(i,
+                                ConcertHall.JAMSIL,
+                                LocalDateTime.of(2024, 3, 3, 17,0),
+                                SeatStatus.AVAILABLE);
             if (i>=5){
                 seat.updateStatus(SeatStatus.RESERVED);
             }

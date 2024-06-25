@@ -4,7 +4,8 @@
 Concert 도메인- Concert, Showtime, Seat(AG)  
 Ticket 도메인- Ticket  
 User 도메인 - User  
-Point 도메인 - Payment, PointTransaction, PaymentTransaction      
+Point 도메인 - Point, PointTransaction 
+Payment 도메인 - Payment, PaymentTransaction
 WaitingQueue 도메인 - Token  
 <br>
 
@@ -19,8 +20,9 @@ WaitingQueue 도메인 - Token
 
 Concert - Ticket(Ticket)  
 Ticket - Concert(Seat), Point(Payment)  
-User - Point(Payment), Point(PaymentTransaction), Ticket(Ticket)    
+User - Point, Payment, Ticket(Ticket)    
 Point - User(Balance), Ticket(Ticket)    
+Payment - User, Ticket
 WaitingQueue - User(User)  
 
 <br>

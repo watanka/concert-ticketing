@@ -1,33 +1,17 @@
 package hhplus.ticketing.domain.concert.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class Seat {
     long seatNo;
     long concertId;
-    long showTimeId;
     SeatStatus status;
 
-
-    public Seat(long seatNo, long concertId, long showTimeId, SeatStatus status) {
-        this.seatNo = seatNo;
-        this.concertId = concertId;
-        this.showTimeId = showTimeId;
-        this.status = status;
-    }
-
-    public long getSeatNo() {
-        return seatNo;
-    }
-
-    public long getConcertId() {
-        return concertId;
-    }
-
-    public long getShowTimeId() {
-        return showTimeId;
-    }
-
-    public SeatStatus getStatus() {
-        return status;
+    public boolean isAvailable(){
+        return this.status == SeatStatus.AVAILABLE;
     }
 
     public void updateStatus(SeatStatus status){

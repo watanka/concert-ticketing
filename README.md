@@ -57,7 +57,7 @@
 
 
 ### API 명세
-[api 디자인](assets/docs/api 디자인.md)  
+[api디자인]("assets/docs/api 디자인.md")  
 - 도메인별 API 디자인  
    
 

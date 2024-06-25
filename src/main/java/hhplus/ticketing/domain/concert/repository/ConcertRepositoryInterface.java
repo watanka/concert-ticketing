@@ -11,7 +11,6 @@ public interface ConcertRepositoryInterface {
 
     List<Concert> getConcertList();
 
-    Concert findConcertById(long concertId);
 
     ShowTime saveShowTime(long concertId, ShowTime showTime);
 
@@ -20,4 +19,6 @@ public interface ConcertRepositoryInterface {
     Seat saveSeat(long showTimeId, Seat seat);
 
     List<Seat> getAvailableSeatList(long concertId);
+
+    Concert findConcertByName(String concertName);
 }

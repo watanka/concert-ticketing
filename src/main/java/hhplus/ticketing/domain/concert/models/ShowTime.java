@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class ShowTime {
-    long showTimeId;
     long concertId;
     LocalDateTime time;
     ConcertHall concertHall;

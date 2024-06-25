@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MemoryConcertRepository implements ConcertRepositoryInterface {
-    Map<Long, Concert> concertMap = new HashMap<>();
+    Map<String, Concert> concertMap = new HashMap<>();
     Map<Long, List<ShowTime>> showTimeMap = new JDefaultDict<>(k -> new ArrayList<>());
 
     Map<Long, List<Seat>> seatMap = new JDefaultDict<>(k -> new ArrayList<>());
@@ -21,7 +21,7 @@ public class MemoryConcertRepository implements ConcertRepositoryInterface {
 
     @Override
     public Concert saveConcert(Concert concert){
-        concertMap.put(concert.getConcertId(), concert);
+        concertMap.put(concert.getConcertName(), concert);
         return concert;
     }
 
@@ -30,9 +30,10 @@ public class MemoryConcertRepository implements ConcertRepositoryInterface {
         return concertMap.values().stream().toList();
     }
 
+
     @Override
-    public Concert findConcertById(long concertId){
-        return concertMap.getOrDefault(concertId, null);
+    public Concert findConcertByName(String concertName){
+        return concertMap.getOrDefault(concertName, null);
     }
 
     @Override
@@ -61,6 +62,7 @@ public class MemoryConcertRepository implements ConcertRepositoryInterface {
                 .filter(s -> s.getStatus() == SeatStatus.AVAILABLE)
                 .toList();
     }
+
 
 
 }

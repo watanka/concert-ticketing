@@ -1,21 +1,21 @@
 package hhplus.ticketing.domain.concert.models;
 
 public class Seat {
-    long seatId;
+    long seatNo;
     long concertId;
     long showTimeId;
     SeatStatus status;
 
 
-    public Seat(long seatId, long concertId, long showTimeId, SeatStatus status) {
-        this.seatId = seatId;
+    public Seat(long seatNo, long concertId, long showTimeId, SeatStatus status) {
+        this.seatNo = seatNo;
         this.concertId = concertId;
         this.showTimeId = showTimeId;
         this.status = status;
     }
 
-    public long getSeatId() {
-        return seatId;
+    public long getSeatNo() {
+        return seatNo;
     }
 
     public long getConcertId() {

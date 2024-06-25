@@ -24,7 +24,7 @@ public class ConcertReaderTest {
     void setUp(){
         long concertId = 1;
 
-        Concert concert = new Concert(concertId, "뉴진스 단독 콘서트", "뉴진스");
+        Concert concert = new Concert("뉴진스 단독 콘서트", "뉴진스");
         concertWriter.registerConcert(concert);
 
 
@@ -32,7 +32,7 @@ public class ConcertReaderTest {
         LocalDateTime time = LocalDateTime.of(2024, 3, 22, 15, 0);
         ConcertHall jamsilConcertHall = ConcertHall.JAMSIL;
 
-        ShowTime showTime = new ShowTime(showTimeId, concertId, time, jamsilConcertHall);
+        ShowTime showTime = new ShowTime(concertId, time, jamsilConcertHall);
         concertWriter.registerShowTime(concertId, showTime);
 
     }
@@ -40,8 +40,8 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트 정보를 조회한다.")
     void register_concert(){
-        Assertions.assertThat(concertReader.getConcert(1).getConcertName())
-                .isEqualTo("뉴진스 단독 콘서트");
+        Assertions.assertThat(concertReader.getConcert("뉴진스 단독 콘서트").getPerformerName())
+                .isEqualTo("뉴진스");
 
     }
 

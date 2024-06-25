@@ -22,8 +22,8 @@ public class ConcertReader {
 
 
 
-    public Concert getConcert(long concertId) {
-        return repository.findConcertById(concertId);
+    public Concert getConcert(String concertName) {
+        return repository.findConcertByName(concertName);
     }
 
 

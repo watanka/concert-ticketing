@@ -6,9 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class Concert {
-    public long concertId;
     public String concertName;
     public String performerName;
-
-
 }

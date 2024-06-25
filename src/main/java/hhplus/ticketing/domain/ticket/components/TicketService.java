@@ -1,7 +1,10 @@
-package hhplus.ticketing.ticket.unit;
+package hhplus.ticketing.domain.ticket.components;
 
+import hhplus.ticketing.base.exceptions.UnAvailableSeatException;
+import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.point.models.User;
+import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 
 public class TicketService {
 

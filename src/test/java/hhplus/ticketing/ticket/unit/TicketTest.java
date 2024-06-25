@@ -1,25 +1,32 @@
 package hhplus.ticketing.ticket.unit;
 
+import hhplus.ticketing.domain.ticket.components.TicketMonitor;
+import hhplus.ticketing.domain.ticket.components.TicketService;
+import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;
+import hhplus.ticketing.domain.ticket.models.Ticket;
+import hhplus.ticketing.domain.ticket.models.TicketStatus;
+import hhplus.ticketing.base.exceptions.UnAvailableSeatException;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.point.models.User;
+import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
 
 public class TicketTest {
 
     TicketRepository ticketRepository;
     TicketService ticketService;
-    TicketMonitor ticketMonitor = Mockito.mock(TicketMonitor.class);
+    TicketMonitor ticketMonitor;
 
     LocalDateTime ticketDate = LocalDateTime.of(2024, 3, 5, 17, 5);
     ConcertHall concertHall = ConcertHall.LOTTE_TOWER;
@@ -35,6 +42,7 @@ public class TicketTest {
     @BeforeEach
     void setUp(){
         ticketRepository = new MemoryTicketRepository();
+        ticketMonitor = new TicketMonitor();
         ticketService = new TicketService(ticketRepository);
 
         user = new User(1);
@@ -72,13 +80,22 @@ public class TicketTest {
 
 
     @Test
-    @DisplayName("5분 내 결제하지 않을 경우, 티켓은 취소된다.")
-    void ticket_cancelled_if_not_paid_in_5_mins(){
+    @DisplayName("결제 직후, 티켓 상태는 예약대기.")
+    void ticket_status_is_pending_before_payment(){
         //given 티켓이 발행되었는데
         Ticket ticket = ticketService.register(user, seat);
-        //when: 5분이 지났을 경우
-        ticketMonitor
 
+        assertThat(ticket.getStatus()).isEqualTo(TicketStatus.PENDING);
+    }
+
+    @Test
+    @DisplayName("결제시간이 5분 지날 때까지 완료하지 않으면 예약취소")
+    void ticket_cancelled_if_not_paid_in_5_mins(){
+
+        Ticket ticket = ticketService.register(user, seat);
+
+        //when: 5분이 지났을 경우
+        ticketMonitor.checkPendingTicket(ticket, ticket.getReservedTime().plusMinutes(6));
         //then: ticket 상태는 취소
         assertThat(ticket.getStatus()).isEqualTo(TicketStatus.CANCELLED);
     }

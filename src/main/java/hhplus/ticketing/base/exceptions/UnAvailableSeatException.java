@@ -1,4 +1,4 @@
-package hhplus.ticketing.ticket.unit;
+package hhplus.ticketing.base.exceptions;
 
 public class UnAvailableSeatException extends RuntimeException {
 }

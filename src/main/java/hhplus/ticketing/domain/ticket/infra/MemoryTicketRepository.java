@@ -1,4 +1,7 @@
-package hhplus.ticketing.ticket.unit;
+package hhplus.ticketing.domain.ticket.infra;
+
+import hhplus.ticketing.domain.ticket.models.Ticket;
+import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 
 import java.util.HashMap;
 import java.util.Map;

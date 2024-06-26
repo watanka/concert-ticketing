@@ -11,6 +11,7 @@ public class Seat {
     long seatNo;
     ConcertHall concertHall;
     LocalDateTime showTime;
+    long price;
     SeatStatus status;
 
     public boolean isAvailable(){

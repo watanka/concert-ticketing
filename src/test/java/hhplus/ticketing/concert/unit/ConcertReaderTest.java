@@ -67,6 +67,7 @@ public class ConcertReaderTest {
             Seat seat = new Seat(i,
                                 ConcertHall.JAMSIL,
                                 LocalDateTime.of(2024, 3, 3, 17,0),
+                                100000,
                                 SeatStatus.AVAILABLE);
             if (i>=5){
                 seat.updateStatus(SeatStatus.RESERVED);

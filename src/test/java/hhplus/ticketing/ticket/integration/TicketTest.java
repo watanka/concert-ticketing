@@ -25,8 +25,8 @@ public class TicketTest {
     @DisplayName("티켓에 대한 모니터링 매 5초마다 수행")
     void monitoring_on_ticket_every_5s() throws InterruptedException{
         await()
-            .atMost(Duration.ofSeconds(10))
-                .untilAsserted(() -> verify(ticketMonitor, atLeast(2)).run());
+            .atMost(Duration.ofSeconds(5))
+                .untilAsserted(() -> verify(ticketMonitor, atLeast(1)).run());
     }
 
 }

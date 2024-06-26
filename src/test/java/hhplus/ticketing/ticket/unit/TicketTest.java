@@ -14,13 +14,11 @@ import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
 
 public class TicketTest {
 
@@ -89,7 +87,7 @@ public class TicketTest {
     }
 
     @Test
-    @DisplayName("결제시간이 5분 지날 때까지 완료하지 않으면 예약취소")
+    @DisplayName("예약시점에서 5분이상 지나면 예약취소")
     void ticket_cancelled_if_not_paid_in_5_mins(){
 
         Ticket ticket = ticketService.register(user, seat);

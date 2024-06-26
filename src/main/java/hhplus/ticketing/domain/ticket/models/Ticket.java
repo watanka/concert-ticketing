@@ -2,6 +2,7 @@ package hhplus.ticketing.domain.ticket.models;
 
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
+import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.point.models.User;
 import lombok.Getter;
 
@@ -9,14 +10,19 @@ import java.time.LocalDateTime;
 
 @Getter
 public class Ticket {
+    long id;
     Seat seat;
     User user;
+    long price;
     TicketStatus status;
     LocalDateTime reservedTime;
 
 
     public Ticket( Seat seat, User user) {
         this.seat = seat;
+        this.seat.updateStatus(SeatStatus.RESERVED);
+        this.price = this.seat.getPrice();
+
         this.user = user;
         this.reservedTime = LocalDateTime.now();
         this.status = TicketStatus.PENDING;

@@ -34,7 +34,7 @@ public class TicketTest {
 
 
     private Seat setSeat(SeatStatus status){
-        return new Seat(seatNo, concertHall, ticketDate, status);
+        return new Seat(seatNo, concertHall, ticketDate, 100000, status);
     }
 
     @BeforeEach

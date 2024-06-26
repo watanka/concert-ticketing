@@ -3,18 +3,17 @@ package hhplus.ticketing.domain.point.components;
 import hhplus.ticketing.domain.point.models.PointTransaction;
 import hhplus.ticketing.domain.point.models.PointType;
 import hhplus.ticketing.domain.point.models.User;
-import hhplus.ticketing.domain.point.infra.MemoryPointRepository;
-import hhplus.ticketing.domain.point.repository.PointRepositoryInterface;
+import hhplus.ticketing.domain.point.repository.PointRepository;
 
 import java.util.List;
 
 public class PointService {
 
-    public PointService(PointRepositoryInterface pointRepository) {
+    public PointService(PointRepository pointRepository) {
         this.pointRepository = pointRepository;
     }
 
-    private PointRepositoryInterface pointRepository;
+    private PointRepository pointRepository;
 
     public PointTransaction rechargePoint(User user, long rechargeAmount) {
         PointTransaction pointTransaction = new PointTransaction(1, user.getUserId(), rechargeAmount, PointType.RECHARGE);
@@ -26,7 +25,7 @@ public class PointService {
 
     public PointTransaction usePoint(User user, long useAmount) {
         PointTransaction pointTransaction = new PointTransaction(1, user.getUserId(), useAmount, PointType.USE);
-        user.rechargePoint(useAmount);
+        user.usePoint(useAmount);
 
         return pointRepository.savePointTransaction(pointTransaction);
     }

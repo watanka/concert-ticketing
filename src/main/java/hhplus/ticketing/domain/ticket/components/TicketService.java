@@ -4,6 +4,7 @@ import hhplus.ticketing.base.exceptions.UnAvailableSeatException;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.point.models.User;
+import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 
 public class TicketService {
@@ -18,13 +19,15 @@ public class TicketService {
         if (!seat.isAvailable()){
             throw new UnAvailableSeatException();
         }
-
         return ticketRepository.save(new Ticket(seat, user));
 
-
     }
-
     public Ticket query(long userId) {
         return ticketRepository.findById(userId);
+    }
+
+    public Ticket confirmPayment(Ticket ticket){
+        ticket.updateStatus(TicketStatus.REGISTERED);
+        return ticket;
     }
 }

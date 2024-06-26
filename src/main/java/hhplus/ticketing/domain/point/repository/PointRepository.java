@@ -4,7 +4,7 @@ import hhplus.ticketing.domain.point.models.PointTransaction;
 
 import java.util.List;
 
-public interface PointRepositoryInterface {
+public interface PointRepository {
     public PointTransaction savePointTransaction(PointTransaction pointTransaction);
     public List<PointTransaction> getAllPointTransactionByUserId(long userId);
 }

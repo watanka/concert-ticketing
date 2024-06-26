@@ -20,4 +20,5 @@ public class Seat {
     public void updateStatus(SeatStatus status){
         this.status = status;
     }
+
 }

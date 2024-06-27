@@ -46,10 +46,10 @@
 - 사용자 식별자 및 충전할 금액을 받아 잔액을 충전합니다.
 - 사용자 식별자를 통해 해당 사용자의 잔액을 조회합니다.
 
-| uri                | method | request header | request body       | response                 | description |
-| :----------------- | :----- | :------------- | ------------------ | :----------------------- | ----------- |
-| `/points`          | `POST` |                | user_id            | `null`                   | 포인트 충전      |
-| `/point_history`   | `GET`  |                | user_id            | List[PointTransaction]   | 포인트 내역 반환   |
+| uri                | method | request header | request body              | response                 | description |
+| :----------------- | :----- | :------------- |---------------------------| :----------------------- |------------|
+| `/points`          | `POST` |                | user_id, point, pointType | `null`                   | 포인트 사용/충전  |
+| `/point_history`   | `GET`  |                | user_id                   | List[PointTransaction]   | 포인트 내역 반환  |
 
 
 ## Payment 도메인

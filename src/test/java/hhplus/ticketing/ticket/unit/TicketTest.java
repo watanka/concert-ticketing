@@ -5,7 +5,7 @@ import hhplus.ticketing.domain.ticket.components.TicketService;
 import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
-import hhplus.ticketing.base.exceptions.UnAvailableSeatException;
+import hhplus.ticketing.base.exceptions.UnavailableSeatException;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
@@ -27,6 +27,8 @@ public class TicketTest {
     TicketMonitor ticketMonitor;
 
     LocalDateTime ticketDate = LocalDateTime.of(2024, 3, 5, 17, 5);
+
+    String concertName = "아이유 10주년 콘서트";
     ConcertHall concertHall = ConcertHall.LOTTE_TOWER;
     long seatNo = 1;
     User user;
@@ -34,7 +36,7 @@ public class TicketTest {
 
 
     private Seat setSeat(SeatStatus status){
-        return new Seat(seatNo, concertHall, ticketDate, 100000, status);
+        return new Seat(seatNo, concertName, concertHall, ticketDate, 100000, status);
     }
 
     @BeforeEach
@@ -52,7 +54,7 @@ public class TicketTest {
     void cannot_reserve_if_seat_is_already_taken(){
         seat.updateStatus(SeatStatus.RESERVED);
 
-        assertThrows(UnAvailableSeatException.class, () -> ticketService.register(user, seat));
+        assertThrows(UnavailableSeatException.class, () -> ticketService.register(user, seat));
     }
 
     @Test

@@ -65,6 +65,7 @@ public class ConcertReaderTest {
     void list_available_seats(){
         for (int i=0; i<10;i++) {
             Seat seat = new Seat(i,
+                                "아이유 10주년 콘서트",
                                 ConcertHall.JAMSIL,
                                 LocalDateTime.of(2024, 3, 3, 17,0),
                                 100000,

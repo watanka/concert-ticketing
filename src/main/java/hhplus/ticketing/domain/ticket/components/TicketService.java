@@ -1,6 +1,6 @@
 package hhplus.ticketing.domain.ticket.components;
 
-import hhplus.ticketing.base.exceptions.UnAvailableSeatException;
+import hhplus.ticketing.base.exceptions.UnavailableSeatException;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.point.models.User;
@@ -17,7 +17,7 @@ public class TicketService {
 
     public Ticket register(User user, Seat seat) {
         if (!seat.isAvailable()){
-            throw new UnAvailableSeatException();
+            throw new UnavailableSeatException();
         }
         return ticketRepository.save(new Ticket(seat, user));
 

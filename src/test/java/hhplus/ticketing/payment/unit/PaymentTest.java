@@ -25,6 +25,7 @@ public class PaymentTest {
 
     private Seat setSeat(long price) {
         return new Seat(1,
+                "아이유 10주년 콘서트",
                 ConcertHall.JAMSIL,
                 LocalDateTime.now(),
                 price, SeatStatus.RESERVED);

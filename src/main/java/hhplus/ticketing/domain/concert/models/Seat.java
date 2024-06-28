@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class Seat {
     long seatNo;
+    String concertName;
     ConcertHall concertHall;
     LocalDateTime showTime;
     long price;

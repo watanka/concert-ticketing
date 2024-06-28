@@ -10,6 +10,9 @@
 ```bash
 ```
 
+### API 문서
+- 어플리케이션 실행후,[Swagger-ui](http://localhost:8080/swagger-ui/index.html#/)에서 확인할 수 있습니다.
+
 ### 기술스택
 - **개발환경**: Intellij CE
 - **WebFramework**: Spring Boot
@@ -57,7 +60,7 @@
 
 
 ### API 명세
-[api디자인]("assets/docs/api_design.md")  
+[api디자인](assets/docs/api_design.md)  
 - 도메인별 API 디자인  
    
 

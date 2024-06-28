@@ -1,6 +1,7 @@
 package hhplus.ticketing.api.point.controller;
 
 import hhplus.ticketing.api.point.dto.PointRequest;
+import hhplus.ticketing.api.point.dto.PointResponse;
 import hhplus.ticketing.api.point.dto.PointTransactionRequest;
 import hhplus.ticketing.domain.point.models.PointTransaction;
 import hhplus.ticketing.domain.point.models.PointType;

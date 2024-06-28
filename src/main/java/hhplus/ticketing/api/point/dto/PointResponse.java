@@ -1,4 +1,4 @@
-package hhplus.ticketing.api.point.controller;
+package hhplus.ticketing.api.point.dto;
 
 import hhplus.ticketing.domain.point.models.PointTransaction;
 import lombok.AllArgsConstructor;

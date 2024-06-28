@@ -4,6 +4,7 @@ import hhplus.ticketing.domain.concert.components.ConcertReader;
 import hhplus.ticketing.domain.concert.components.ConcertWriter;
 import hhplus.ticketing.domain.concert.models.*;
 import hhplus.ticketing.domain.concert.infra.MemoryConcertRepository;
+import hhplus.ticketing.domain.concert.repository.ConcertRepository;
 import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class ConcertReaderTest {
 
-    private MemoryConcertRepository repository = new MemoryConcertRepository();
+    private ConcertRepository repository = new MemoryConcertRepository();
     private ConcertReader concertReader = new ConcertReader(repository);
     private ConcertWriter concertWriter = new ConcertWriter(repository);
 

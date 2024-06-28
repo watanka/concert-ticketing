@@ -5,14 +5,16 @@ import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.concert.models.ShowTime;
-import hhplus.ticketing.domain.concert.repository.ConcertRepositoryInterface;
+import hhplus.ticketing.domain.concert.repository.ConcertRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MemoryConcertRepository implements ConcertRepositoryInterface {
+@Repository
+public class MemoryConcertRepository implements ConcertRepository {
     Map<String, Concert> concertMap = new HashMap<>();
     Map<Long, List<ShowTime>> showTimeMap = new JDefaultDict<>(k -> new ArrayList<>());
 

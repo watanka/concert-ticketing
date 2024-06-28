@@ -3,10 +3,12 @@ package hhplus.ticketing.domain.concert.repository;
 import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.ShowTime;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ConcertRepositoryInterface {
+@Repository
+public interface ConcertRepository {
     Concert saveConcert(Concert concert);
 
     List<Concert> getConcertList();

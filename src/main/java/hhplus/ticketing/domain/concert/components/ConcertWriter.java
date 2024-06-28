@@ -3,12 +3,14 @@ package hhplus.ticketing.domain.concert.components;
 import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.ShowTime;
-import hhplus.ticketing.domain.concert.repository.ConcertRepositoryInterface;
+import hhplus.ticketing.domain.concert.repository.ConcertRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class ConcertWriter {
-    private final ConcertRepositoryInterface repository;
+    private final ConcertRepository repository;
 
     public Concert registerConcert(Concert concert){
         return repository.saveConcert(concert);

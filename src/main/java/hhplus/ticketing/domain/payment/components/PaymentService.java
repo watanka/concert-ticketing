@@ -13,6 +13,7 @@ import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PaymentService {
@@ -30,7 +31,7 @@ public class PaymentService {
         pointService.usePoint(user, ticket.getPrice());
         ticketService.confirmPayment(ticket);
 
-        PaymentTransaction paymentTransaction = new PaymentTransaction(user.getUserId(), ticket.getPrice(), ticket.getId());
+        PaymentTransaction paymentTransaction = new PaymentTransaction(user.getUserId(), ticket.getPrice(), ticket.getId(), LocalDateTime.now());
         paymentTransactionRepository.save(paymentTransaction);
 
         return paymentTransaction;

@@ -8,13 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class PointResponse {
-
-    long balance;
-    List<PointTransaction> pointHistory;
+public record PointResponse(
+        long balance,
+        List<PointTransaction> pointHistory
+) {
 
 }

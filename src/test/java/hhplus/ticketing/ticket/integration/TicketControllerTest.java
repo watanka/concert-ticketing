@@ -1,12 +1,13 @@
 package hhplus.ticketing.ticket.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hhplus.ticketing.api.ticket.controller.dto.PostTicketRequest;
+import hhplus.ticketing.api.ticket.dto.PostTicketRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +31,7 @@ public class TicketControllerTest {
     @Test
     void reserve_ticket() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/tickets")
+                        .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new PostTicketRequest(1, 2, 45)
@@ -58,6 +60,7 @@ public class TicketControllerTest {
     @Test
     void view_ticket() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/tickets")
+                        .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", "1"))
                 .andExpect(status().isOk())

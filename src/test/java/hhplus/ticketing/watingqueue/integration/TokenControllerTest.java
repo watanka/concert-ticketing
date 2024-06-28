@@ -1,14 +1,13 @@
-package hhplus.ticketing.point.integration;
-
+package hhplus.ticketing.watingqueue.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hhplus.ticketing.api.point.dto.PointRequest;
-import hhplus.ticketing.domain.point.models.PointType;
+import hhplus.ticketing.api.watingqueue.dto.TokenRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,8 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-public class PointControllerTest {
-
+public class TokenControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -31,35 +29,36 @@ public class PointControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    void recharge_point() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/points")
+    void register_waiting_queue() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/tokens")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new PointRequest(2, 100000, PointType.RECHARGE.toString()))
-
+                            new TokenRequest(1))
                         )
                 )
                 .andExpect(status().isOk())
-                .andDo(print())
-        ;
-
+                .andExpect(MockMvcResultMatchers.content()
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.token")
+                        .value("TEMPORARY-TOKEN")
+                )
+                .andDo(print());
     }
 
     @Test
-    void query_point() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/point_history")
-                        .param("userId", String.valueOf(1))
+    void query_waiting_number() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tokens")
+                        .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
                 )
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.pointHistory[0].type")
-                        .value(PointType.RECHARGE.toString()))
-                .andExpect(jsonPath("$.balance")
-                        .value(20000))
+                .andExpect(jsonPath("$.userId")
+                        .value(1))
+                .andExpect(jsonPath("$.waitingNo")
+                        .value(10))
                 .andDo(print());
 
     }
-
-
 }
+

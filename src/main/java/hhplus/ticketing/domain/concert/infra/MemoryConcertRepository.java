@@ -5,15 +5,16 @@ import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.concert.models.ShowTime;
-import hhplus.ticketing.domain.concert.repository.ConcertRepositoryInterface;
+import hhplus.ticketing.domain.concert.repository.ConcertRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MemoryConcertRepository implements ConcertRepositoryInterface {
-    Map<String, Concert> concertMap = new HashMap<>();
+public class MemoryConcertRepository implements ConcertRepository {
+    Map<Long, Concert> concertMap = new HashMap<>();
     Map<Long, List<ShowTime>> showTimeMap = new JDefaultDict<>(k -> new ArrayList<>());
 
     Map<Long, List<Seat>> seatMap = new JDefaultDict<>(k -> new ArrayList<>());
@@ -21,7 +22,7 @@ public class MemoryConcertRepository implements ConcertRepositoryInterface {
 
     @Override
     public Concert saveConcert(Concert concert){
-        concertMap.put(concert.getConcertName(), concert);
+        concertMap.put(concert.getId(), concert);
         return concert;
     }
 
@@ -32,8 +33,8 @@ public class MemoryConcertRepository implements ConcertRepositoryInterface {
 
 
     @Override
-    public Concert findConcertByName(String concertName){
-        return concertMap.getOrDefault(concertName, null);
+    public Concert findConcertById(long concertId){
+        return concertMap.getOrDefault(concertId, null);
     }
 
     @Override

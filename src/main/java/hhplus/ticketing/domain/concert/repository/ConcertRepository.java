@@ -6,7 +6,7 @@ import hhplus.ticketing.domain.concert.models.ShowTime;
 
 import java.util.List;
 
-public interface ConcertRepositoryInterface {
+public interface ConcertRepository {
     Concert saveConcert(Concert concert);
 
     List<Concert> getConcertList();
@@ -20,5 +20,5 @@ public interface ConcertRepositoryInterface {
 
     List<Seat> getAvailableSeatList(long concertId);
 
-    Concert findConcertByName(String concertName);
+    Concert findConcertById(long concertId);
 }

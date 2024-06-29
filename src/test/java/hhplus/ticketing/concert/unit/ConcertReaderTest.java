@@ -4,7 +4,7 @@ import hhplus.ticketing.domain.concert.components.ConcertReader;
 import hhplus.ticketing.domain.concert.components.ConcertWriter;
 import hhplus.ticketing.domain.concert.models.*;
 import hhplus.ticketing.domain.concert.infra.MemoryConcertRepository;
-import org.assertj.core.api.Assert;
+import hhplus.ticketing.domain.concert.repository.ConcertRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ConcertReaderTest {
 
-    private MemoryConcertRepository repository = new MemoryConcertRepository();
+    private ConcertRepository repository = new MemoryConcertRepository();
     private ConcertReader concertReader = new ConcertReader(repository);
     private ConcertWriter concertWriter = new ConcertWriter(repository);
 
@@ -40,7 +40,7 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트 정보를 조회한다.")
     void register_concert(){
-        Assertions.assertThat(concertReader.getConcert("뉴진스 단독 콘서트").getPerformerName())
+        Assertions.assertThat(concertReader.findConcert(1).getPerformerName())
                 .isEqualTo("뉴진스");
 
     }

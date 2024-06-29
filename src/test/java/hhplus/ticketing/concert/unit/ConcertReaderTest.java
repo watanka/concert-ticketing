@@ -40,7 +40,7 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트 정보를 조회한다.")
     void register_concert(){
-        Assertions.assertThat(concertReader.findConcert(1).getPerformerName())
+        Assertions.assertThat(concertReader.findConcert(0).getPerformerName())
                 .isEqualTo("뉴진스");
 
     }
@@ -48,8 +48,8 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트 목록을 반환한다.")
     void list_all_registered_concerts(){
-        Assertions.assertThat(concertReader.getConcertList().get(0).getConcertName())
-                .isEqualTo("뉴진스 단독 콘서트");
+        Assertions.assertThat(concertReader.getConcertList().get(0).getId())
+                .isEqualTo(0);
     }
 
 

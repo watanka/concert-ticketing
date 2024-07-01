@@ -72,7 +72,7 @@ public class ConcertReaderIntegrationTest {
     }
 
     @Test
-    @DisplayName("예매가능한 좌석을 반환한다.")
+    @DisplayName("공연시간의 좌석들을 반환한다.")
     void list_available_seats(){
         LocalDateTime showTime = LocalDateTime.of(2024, 3, 3, 17,0);
         for (int i=0; i<10;i++) {
@@ -82,17 +82,12 @@ public class ConcertReaderIntegrationTest {
                                  showTime,
                                 100000,
                                  SeatStatus.AVAILABLE);
-            if (i>=5){
-                seat.updateStatus(SeatStatus.RESERVED);
-            }
             concertWriter.registerSeat(seat);
-        }
+            }
 
-        List<Seat> seatList = concertReader.getAvailableSeats(2, showTime);
-        assertThat(seatList.size()).isEqualTo(5);
-        for (Seat seat : seatList) {
-            assertThat(seat.getStatus()).isEqualTo(SeatStatus.AVAILABLE);
-        }
+        List<Seat> seatList = concertReader.getSeatList(2, showTime);
+        assertThat(seatList.size()).isEqualTo(10);
+
 
     }
 

@@ -19,7 +19,7 @@ public interface ConcertRepository {
 
     public Seat saveSeat(Seat seat);
 
-    List<Seat> getAvailableSeatList(long concertId, LocalDateTime showTime);
+    List<Seat> getSeatList(long concertId, LocalDateTime showTime);
 
     Concert findConcertById(long concertId);
 }

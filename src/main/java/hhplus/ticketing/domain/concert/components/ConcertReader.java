@@ -35,8 +35,8 @@ public class ConcertReader {
     }
 
 
-    public List<Seat> getAvailableSeats(long concertId, LocalDateTime showTime) {
-        return repository.getAvailableSeatList(concertId, showTime);
+    public List<Seat> getSeatList(long concertId, LocalDateTime showTime) {
+        return repository.getSeatList(concertId, showTime);
     }
 
 }

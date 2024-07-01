@@ -16,7 +16,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@EnableJpaRepositories(basePackages = "hhplus.ticketing.domain.concert.infra")
 public class ConcertReaderIntegrationTest {
     @Autowired
     ConcertReader concertReader;

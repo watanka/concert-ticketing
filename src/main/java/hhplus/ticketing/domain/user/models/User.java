@@ -1,15 +1,17 @@
-package hhplus.ticketing.domain.point.models;
+package hhplus.ticketing.domain.user.models;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class User {
     private long userId;
     private long balance;
 
-    public User(long userId) {
+    public User(long userId, long balance) {
         this.userId = userId;
-        this.balance = 0;
+        this.balance = balance;
     }
 
     public void rechargePoint(long pointAmount) {

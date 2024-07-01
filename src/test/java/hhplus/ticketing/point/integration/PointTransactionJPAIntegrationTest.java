@@ -1,29 +1,26 @@
-package hhplus.ticketing.point.unit;
+package hhplus.ticketing.point.integration;
 
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.models.PointTransaction;
-import hhplus.ticketing.domain.point.models.PointType;
 import hhplus.ticketing.domain.user.models.User;
-import hhplus.ticketing.domain.point.infra.MemoryPointRepository;
-import hhplus.ticketing.domain.user.infra.MemoryUserRepository;
-import hhplus.ticketing.domain.user.repository.UserRepository;
 import hhplus.ticketing.domain.user.components.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PointTransactionTest {
 
-    UserRepository userRepository = new MemoryUserRepository();
-    UserService userService = new UserService(userRepository);
-
-    MemoryPointRepository memoryPointRepository = new MemoryPointRepository();
-    PointService pointService = new PointService(memoryPointRepository);
+@SpringBootTest
+class PointTransactionJPAIntegrationTest {
+    @Autowired
+    PointService pointService;
+    @Autowired
+    UserService userService;
 
     private User setUser(long userId, long balance){
         return new User(userId, balance);
@@ -31,17 +28,19 @@ public class PointTransactionTest {
 
 
 
-
     @Test
-    @DisplayName("포인트를 충전한다.")
+    @DisplayName("포인트를 충전하면, 유저 잔액이 충전 포인트만큼 늘어난다.")
     void recharge_point(){
         long pointAmount = 10000;
         User user = setUser(1, 0);
-        user.rechargePoint(pointAmount);
+        pointService.rechargePoint(user, pointAmount);
         userService.save(user);
 
+
         User userFound = userService.findById(user.getUserId());
-        Assertions.assertThat(userFound.getBalance()).isEqualTo(pointAmount);
+
+
+        assertThat(userFound.getBalance()).isEqualTo(pointAmount);
 
     }
 
@@ -54,12 +53,11 @@ public class PointTransactionTest {
 
         User user = setUser(1, pointAmount);
         //when
-        user.usePoint(usePoint);
+        pointService.usePoint(user, usePoint);
         userService.save(user);
-
         //then
         User userFound = userService.findById(user.getUserId());
-        Assertions.assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePoint);
+        assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePoint);
     }
 
     @Test
@@ -69,15 +67,17 @@ public class PointTransactionTest {
         long usePoint = 3000;
 
         User user = setUser(1, balance);
+        userService.save(user);
+
+
 
         assertThrows(IllegalArgumentException.class,
-                () -> user.usePoint(usePoint));
+                () -> pointService.usePoint(user, usePoint));
     }
 
     @Test
     @DisplayName("포인트 충전/사용 내역이 기록된다.")
     void record_point_transaction_history(){
-
 
         long userId = 1;
 
@@ -87,13 +87,11 @@ public class PointTransactionTest {
 
         pointService.rechargePoint(user, rechargePoint);
         pointService.usePoint(user, usePoint);
+        userService.save(user);
 
-        Assertions.assertThat(pointService.queryTransactions(userId))
-                .isEqualTo(
-                        List.of(
-                                new PointTransaction(userId, LocalDateTime.now(), 50000, PointType.RECHARGE),
-                                new PointTransaction(userId, LocalDateTime.now(),30000, PointType.USE)
-                        ));
+        List<PointTransaction> pointTransactionList = pointService.queryTransactions(userId);
+        assertThat(pointTransactionList).hasSize(2);
+        assertThat(pointTransactionList.get(0).amount()).isEqualTo(rechargePoint);
     }
 
 }

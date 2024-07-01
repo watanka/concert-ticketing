@@ -6,7 +6,7 @@ import hhplus.ticketing.domain.payment.models.PaymentTransaction;
 import hhplus.ticketing.domain.payment.repository.PaymentTransactionRepository;
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.infra.MemoryPointRepository;
-import hhplus.ticketing.domain.point.models.User;
+import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.point.repository.PointRepository;
 import hhplus.ticketing.domain.ticket.components.TicketService;
 import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;

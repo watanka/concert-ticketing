@@ -6,7 +6,7 @@ import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.payment.components.PaymentService;
 import hhplus.ticketing.domain.payment.models.PaymentTransaction;
-import hhplus.ticketing.domain.point.models.User;
+import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import org.assertj.core.api.Assertions;
@@ -36,8 +36,7 @@ public class PaymentTest {
     }
 
     private User setUser(long balance){
-        User user = new User(1);
-        user.rechargePoint(balance);
+        User user = new User(1, balance);
 
         return user;
     }

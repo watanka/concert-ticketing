@@ -9,7 +9,7 @@ import hhplus.ticketing.base.exceptions.UnavailableSeatException;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
-import hhplus.ticketing.domain.point.models.User;
+import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +52,7 @@ public class TicketTest {
         ticketMonitor = new TicketMonitor();
         ticketService = new TicketService(ticketRepository);
 
-        user = new User(1);
+        user = new User(1, 0);
         seat = setSeat(SeatStatus.AVAILABLE);
     }
 

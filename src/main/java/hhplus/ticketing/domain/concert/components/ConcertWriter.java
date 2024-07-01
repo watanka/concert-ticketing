@@ -18,12 +18,12 @@ public class ConcertWriter {
         return repository.saveConcert(concert);
     }
 
-    public ShowTime registerShowTime(long concertId, ShowTime showTime){
-        return repository.saveShowTime(concertId, showTime);
+    public ShowTime registerShowTime(ShowTime showTime){
+        return repository.saveShowTime(showTime);
     }
 
-    public Seat registerSeat(long showTimeId, Seat seat) {
-        return repository.saveSeat(showTimeId, seat);
+    public Seat registerSeat(Seat seat) {
+        return repository.saveSeat(seat);
     }
 
 }

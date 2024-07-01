@@ -24,11 +24,15 @@ public class PaymentTest {
     PaymentService paymentService = new PaymentService();
 
     private Seat setSeat(long price) {
-        return new Seat(1,
-                "아이유 10주년 콘서트",
-                ConcertHall.JAMSIL,
-                LocalDateTime.now(),
-                price, SeatStatus.RESERVED);
+        return  Seat.builder()
+                .seatNo(1)
+                .concertName("아이유 10주년 콘서트")
+                .concertHall(ConcertHall.JAMSIL)
+                .showTime(LocalDateTime.now())
+                .price(100000)
+                .status(SeatStatus.RESERVED)
+                .build();
+
     }
 
     private User setUser(long balance){

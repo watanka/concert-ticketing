@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Seat {
     long seatNo;
+    long concertId;
     String concertName;
     ConcertHall concertHall;
     LocalDateTime showTime;

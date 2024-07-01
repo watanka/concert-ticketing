@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@EnableJpaRepositories(basePackages = "hhplus.ticketing.domain.concert.infra")
 public class ConcertReaderIntegrationTest {
     @Autowired
     ConcertReader concertReader;
@@ -24,13 +26,15 @@ public class ConcertReaderIntegrationTest {
     @BeforeEach
     void setUp(){
 
-//        long showTimeId = 1;
-//        LocalDateTime time = LocalDateTime.of(2024, 3, 22, 15, 0);
-//        ConcertHall jamsilConcertHall = ConcertHall.JAMSIL;
-//
-//        ShowTime showTime = new ShowTime(concertId, time, jamsilConcertHall);
-//        concertWriter.registerShowTime(concertId, showTime);
+        long showTimeId = 1;
+        long concertId = 1;
+        LocalDateTime time = LocalDateTime.of(2024, 3, 22, 15, 0);
+        ConcertHall jamsilConcertHall = ConcertHall.JAMSIL;
 
+
+        ShowTime showTime = new ShowTime(concertId, time, jamsilConcertHall);
+        concertWriter.registerShowTime(showTime);
+//
     }
 
     @Test
@@ -70,20 +74,21 @@ public class ConcertReaderIntegrationTest {
     @Test
     @DisplayName("예매가능한 좌석을 반환한다.")
     void list_available_seats(){
+        LocalDateTime showTime = LocalDateTime.of(2024, 3, 3, 17,0);
         for (int i=0; i<10;i++) {
             Seat seat = new Seat(i,
-                    "아이유 10주년 콘서트",
-                    ConcertHall.JAMSIL,
-                    LocalDateTime.of(2024, 3, 3, 17,0),
-                    100000,
-                    SeatStatus.AVAILABLE);
+                                2, "아이유 10주년 콘서트",
+                                 ConcertHall.JAMSIL,
+                                 showTime,
+                                100000,
+                                 SeatStatus.AVAILABLE);
             if (i>=5){
                 seat.updateStatus(SeatStatus.RESERVED);
             }
-            concertWriter.registerSeat(1, seat);
+            concertWriter.registerSeat(seat);
         }
 
-        List<Seat> seatList = concertReader.getAvailableSeats(1);
+        List<Seat> seatList = concertReader.getAvailableSeats(2, showTime);
         assertThat(seatList.size()).isEqualTo(5);
         for (Seat seat : seatList) {
             assertThat(seat.getStatus()).isEqualTo(SeatStatus.AVAILABLE);

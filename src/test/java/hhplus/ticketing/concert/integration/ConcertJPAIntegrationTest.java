@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled
+
 @DataJpaTest
 public class ConcertJPAIntegrationTest {
 
@@ -77,6 +77,7 @@ public class ConcertJPAIntegrationTest {
     @Test
     @DisplayName("콘서트의 공연시간들을 반환한다.")
     void list_all_showtimes(){
+
         assertThat(showTimeJPARepository.findShowTimeEntityListByConcertId(1).size())
                 .isEqualTo(2);
         assertThat(showTimeJPARepository.findShowTimeEntityListByConcertId(1).get(0).getConcertHall())
@@ -89,16 +90,16 @@ public class ConcertJPAIntegrationTest {
 
         LocalDateTime time = LocalDateTime.of(2024, 3, 3, 17,0);
         for (int i=0; i<5;i++) {
-            SeatEntity seat = new SeatEntity(i, 1, ConcertHall.JAMSIL, time, 200000, SeatStatus.AVAILABLE);
+            SeatEntity seat = new SeatEntity(1, time, i, "아이유 10주년 콘서트", ConcertHall.JAMSIL, 200000, SeatStatus.AVAILABLE);
             seatJPARepository.save(seat);
         }
 
         for (int i=5; i<10;i++) {
-            SeatEntity seat = new SeatEntity(i, 1, ConcertHall.JAMSIL, time, 200000, SeatStatus.RESERVED);
+            SeatEntity seat = new SeatEntity(1, time, i, "아이유 10주년 콘서트", ConcertHall.JAMSIL, 200000, SeatStatus.RESERVED);
             seatJPARepository.save(seat);
         }
 
-        List<SeatEntity> seatList = seatJPARepository.getSeatListByShowTimeId(1);
+        List<SeatEntity> seatList = seatJPARepository.getSeatListByConcertIdAndShowTime(1, time);
 
         assertThat(seatList.size()).isEqualTo(10);
     }

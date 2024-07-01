@@ -33,7 +33,7 @@ public class ConcertReaderTest {
         ConcertHall jamsilConcertHall = ConcertHall.JAMSIL;
 
         ShowTime showTime = new ShowTime(concertId, time, jamsilConcertHall);
-        concertWriter.registerShowTime(concertId, showTime);
+        concertWriter.registerShowTime(showTime);
 
     }
 
@@ -63,20 +63,23 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("예매가능한 좌석을 반환한다.")
     void list_available_seats(){
+        LocalDateTime showTime = LocalDateTime.now();
         for (int i=0; i<10;i++) {
-            Seat seat = new Seat(i,
-                                "아이유 10주년 콘서트",
-                                ConcertHall.JAMSIL,
-                                LocalDateTime.of(2024, 3, 3, 17,0),
-                                100000,
-                                SeatStatus.AVAILABLE);
+            Seat seat = Seat.builder()
+                    .seatNo(1)
+                    .concertName("아이유 10주년 콘서트")
+                    .concertHall(ConcertHall.JAMSIL)
+                    .showTime(showTime)
+                    .price(100000)
+                    .status(SeatStatus.AVAILABLE)
+                    .build();
             if (i>=5){
                 seat.updateStatus(SeatStatus.RESERVED);
             }
-            concertWriter.registerSeat(1, seat);
+            concertWriter.registerSeat(seat);
         }
 
-        List<Seat> seatList = concertReader.getAvailableSeats(1);
+        List<Seat> seatList = concertReader.getAvailableSeats(1, showTime );
         Assertions.assertThat(seatList.size()).isEqualTo(5);
         for (Seat seat : seatList) {
             Assertions.assertThat(seat.getStatus()).isEqualTo(SeatStatus.AVAILABLE);

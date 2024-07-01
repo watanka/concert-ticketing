@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,8 +35,8 @@ public class ConcertReader {
     }
 
 
-    public List<Seat> getAvailableSeats(long concertId) {
-        return repository.getAvailableSeatList(concertId);
+    public List<Seat> getAvailableSeats(long concertId, LocalDateTime showTime) {
+        return repository.getAvailableSeatList(concertId, showTime);
     }
 
 }

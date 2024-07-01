@@ -36,7 +36,14 @@ public class TicketTest {
 
 
     private Seat setSeat(SeatStatus status){
-        return new Seat(seatNo, concertName, concertHall, ticketDate, 100000, status);
+        return  Seat.builder()
+                .seatNo(seatNo)
+                .concertName(concertName)
+                .concertHall(concertHall)
+                .showTime(ticketDate)
+                .price(100000)
+                .status(status)
+                .build();
     }
 
     @BeforeEach

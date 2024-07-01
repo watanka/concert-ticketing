@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 public class ConcertEntity {
 
@@ -24,7 +25,6 @@ public class ConcertEntity {
     @Column(name="performer_name")
     String performerName;
 
-    @Builder
     public ConcertEntity(String name, String performerName) {
         this.name = name;
         this.performerName = performerName;
@@ -32,6 +32,7 @@ public class ConcertEntity {
 
     public static ConcertEntity from(Concert concert) {
         return ConcertEntity.builder()
+                .id(concert.getId())
                 .name(concert.getName())
                 .performerName(concert.getPerformerName())
                 .build();
@@ -39,6 +40,7 @@ public class ConcertEntity {
 
     public static Concert to(ConcertEntity concertEntity) {
         return Concert.builder()
+                .id(concertEntity.getId())
                 .name(concertEntity.getName())
                 .performerName(concertEntity.getPerformerName())
                 .build();

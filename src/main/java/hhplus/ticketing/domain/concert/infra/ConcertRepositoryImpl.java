@@ -1,6 +1,8 @@
 package hhplus.ticketing.domain.concert.infra;
 
 import hhplus.ticketing.domain.concert.infra.entity.ConcertEntity;
+import hhplus.ticketing.domain.concert.infra.entity.SeatEntity;
+import hhplus.ticketing.domain.concert.infra.entity.ShowTimeEntity;
 import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.ShowTime;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -37,23 +40,32 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     }
 
     @Override
-    public ShowTime saveShowTime(long concertId, ShowTime showTime) {
-        return null;
+    public ShowTime saveShowTime(ShowTime showTime) {
+        ShowTimeEntity showTimeEntity = showTimeJPARepository.save(ShowTimeEntity.from(showTime));
+        return ShowTimeEntity.to(showTimeEntity);
     }
 
     @Override
     public List<ShowTime> getShowTimeListByConcertId(long concertId) {
-        return null;
+        List<ShowTimeEntity> showTimeEntityList = showTimeJPARepository.findShowTimeEntityListByConcertId(concertId);
+
+        return showTimeEntityList.stream()
+                .map(ShowTimeEntity::to)
+                .toList();
     }
 
     @Override
-    public Seat saveSeat(long showTimeId, Seat seat) {
-        return null;
+    public Seat saveSeat(Seat seat) {
+        SeatEntity seatEntity = seatJPARepository.save(SeatEntity.from(seat));
+        return SeatEntity.to(seatEntity);
     }
 
     @Override
-    public List<Seat> getAvailableSeatList(long concertId) {
-        return null;
+    public List<Seat> getAvailableSeatList(long concertId, LocalDateTime showTime) {
+        List<SeatEntity> seatEntityList = seatJPARepository.getSeatListByConcertIdAndShowTime(concertId, showTime);
+        return seatEntityList.stream()
+                .map(SeatEntity::to)
+                .toList();
     }
 
     @Override

@@ -61,7 +61,7 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     }
 
     @Override
-    public List<Seat> getAvailableSeatList(long concertId, LocalDateTime showTime) {
+    public List<Seat> getSeatList(long concertId, LocalDateTime showTime) {
         List<SeatEntity> seatEntityList = seatJPARepository.getSeatListByConcertIdAndShowTime(concertId, showTime);
         return seatEntityList.stream()
                 .map(SeatEntity::to)

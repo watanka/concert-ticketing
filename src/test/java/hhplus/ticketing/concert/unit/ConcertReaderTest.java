@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class ConcertReaderTest {
 
@@ -40,7 +42,7 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트 정보를 조회한다.")
     void register_concert(){
-        Assertions.assertThat(concertReader.findConcert(0).getPerformerName())
+        assertThat(concertReader.findConcert(0).getPerformerName())
                 .isEqualTo("뉴진스");
 
     }
@@ -48,7 +50,7 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트 목록을 반환한다.")
     void list_all_registered_concerts(){
-        Assertions.assertThat(concertReader.getConcertList().get(0).getId())
+        assertThat(concertReader.getConcertList().get(0).getId())
                 .isEqualTo(0);
     }
 
@@ -56,34 +58,29 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트의 공연시간들을 반환한다.")
     void list_all_showtimes(){
-        Assertions.assertThat(concertReader.getShowTimeList(1).get(0).getConcertHall())
+        assertThat(concertReader.getShowTimeList(1).get(0).getConcertHall())
                 .isEqualTo(ConcertHall.JAMSIL);
     }
 
     @Test
-    @DisplayName("예매가능한 좌석을 반환한다.")
+    @DisplayName("공연시간의 좌석들을 반환한다.")
     void list_available_seats(){
         LocalDateTime showTime = LocalDateTime.now();
         for (int i=0; i<10;i++) {
             Seat seat = Seat.builder()
                     .seatNo(1)
+                    .concertId(1)
                     .concertName("아이유 10주년 콘서트")
                     .concertHall(ConcertHall.JAMSIL)
                     .showTime(showTime)
                     .price(100000)
                     .status(SeatStatus.AVAILABLE)
                     .build();
-            if (i>=5){
-                seat.updateStatus(SeatStatus.RESERVED);
-            }
             concertWriter.registerSeat(seat);
-        }
+            }
 
-        List<Seat> seatList = concertReader.getAvailableSeats(1, showTime );
-        Assertions.assertThat(seatList.size()).isEqualTo(5);
-        for (Seat seat : seatList) {
-            Assertions.assertThat(seat.getStatus()).isEqualTo(SeatStatus.AVAILABLE);
-        }
+        List<Seat> seatList = concertReader.getSeatList(1, showTime );
+        assertThat(seatList).hasSize(10);
 
     }
 

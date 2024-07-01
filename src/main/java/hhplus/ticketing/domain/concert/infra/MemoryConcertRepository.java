@@ -52,20 +52,17 @@ public class MemoryConcertRepository implements ConcertRepository {
 
     @Override
     public Seat saveSeat(Seat seat) {
-        String showTimeKey = setShowTimeKey( seat.getConcertId(), seat.getShowTime());
+        String showTimeKey = setShowTimeKey(seat.getConcertId(), seat.getShowTime());
         List<Seat> seatList = seatMap.get(showTimeKey);
         seatList.add(seat);
         return seat;
     }
 
     @Override
-    public List<Seat> getAvailableSeatList(long concertId, LocalDateTime showTime) {
+    public List<Seat> getSeatList(long concertId, LocalDateTime showTime) {
         String showTimeId = setShowTimeKey(concertId, showTime);
 
-        List<Seat> seatList = seatMap.get(showTimeId);
-        return seatList.stream()
-                .filter(s -> s.getStatus() == SeatStatus.AVAILABLE)
-                .toList();
+        return seatMap.get(showTimeId);
     }
 
 

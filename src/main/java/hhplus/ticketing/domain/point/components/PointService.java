@@ -1,5 +1,6 @@
 package hhplus.ticketing.domain.point.components;
 
+import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.point.models.PointTransaction;
 import hhplus.ticketing.domain.point.models.PointType;
 import hhplus.ticketing.domain.user.models.User;
@@ -18,17 +19,8 @@ public class PointService {
     @Autowired
     private final PointRepository pointRepository;
 
-    public PointTransaction rechargePoint(User user, long rechargeAmount) {
-        PointTransaction pointTransaction = new PointTransaction(user.getUserId(), LocalDateTime.now(), rechargeAmount, PointType.RECHARGE);
-        user.rechargePoint(rechargeAmount);
-
-        return pointRepository.savePointTransaction(pointTransaction);
-
-    }
-
-    public PointTransaction usePoint(User user, long useAmount) {
-        PointTransaction pointTransaction = new PointTransaction(user.getUserId(), LocalDateTime.now(), useAmount, PointType.USE);
-        user.usePoint(useAmount);
+    public PointTransaction recordPointTransaction(long userId, Point point, LocalDateTime time) {
+        PointTransaction pointTransaction = new PointTransaction(userId, time, point.getAmount(), point.getType());
 
         return pointRepository.savePointTransaction(pointTransaction);
     }

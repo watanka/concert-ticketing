@@ -1,5 +1,6 @@
 package hhplus.ticketing.domain.user.components;
 
+import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,4 +22,11 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
+
+    public User updateBalance(User user, Point point){
+        user.updatePoint(point);
+        userRepository.save(user);
+        return user;
+    }
+
 }

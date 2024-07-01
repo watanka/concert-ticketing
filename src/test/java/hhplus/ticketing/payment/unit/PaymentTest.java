@@ -51,7 +51,7 @@ public class PaymentTest {
 
 
         assertThrows(InsufficientBalanceException.class, () ->
-                paymentService.processPayment(ticket, user));
+                paymentService.processPayment(ticket, user, LocalDateTime.now()));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class PaymentTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user);
+        paymentService.processPayment(ticket, user, LocalDateTime.now());
 
         assertThat(user.getBalance()).isEqualTo(100000);
     }
@@ -73,7 +73,7 @@ public class PaymentTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user);
+        paymentService.processPayment(ticket, user, LocalDateTime.now());
 
         assertThat(ticket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
     }
@@ -85,7 +85,7 @@ public class PaymentTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user);
+        paymentService.processPayment(ticket, user, LocalDateTime.now());
 
         List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getUserId());
 

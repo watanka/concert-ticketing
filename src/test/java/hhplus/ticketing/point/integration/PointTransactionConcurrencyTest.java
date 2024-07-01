@@ -1,6 +1,8 @@
 package hhplus.ticketing.point.integration;
 
 import hhplus.ticketing.domain.point.components.PointService;
+import hhplus.ticketing.domain.point.models.Point;
+import hhplus.ticketing.domain.point.models.PointType;
 import hhplus.ticketing.domain.user.components.UserService;
 import hhplus.ticketing.domain.user.models.User;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,10 +35,13 @@ public class PointTransactionConcurrencyTest {
         CountDownLatch latch = new CountDownLatch(numThreads);
         ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
 
-        for(int i=0; i<numThreads;i++){
-            executorService.execute(()->
-                pointService.rechargePoint(user, 100)
-                    );
+        {
+            for (int i = 0; i < numThreads; i++) {
+                executorService.execute(() ->{
+                        Point usePoint = new Point(100, PointType.USE);
+                        pointService.recordPointTransaction(user.getUserId(), usePoint, LocalDateTime.now());
+                });
+            }
         }
         userService.save(user);
 

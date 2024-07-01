@@ -1,7 +1,10 @@
 package hhplus.ticketing.point.integration;
 
+import hhplus.ticketing.base.exceptions.NotEnoughBalanceException;
 import hhplus.ticketing.domain.point.components.PointService;
+import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.point.models.PointTransaction;
+import hhplus.ticketing.domain.point.models.PointType;
 import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.user.components.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,9 +36,10 @@ class PointTransactionJPAIntegrationTest {
     @DisplayName("포인트를 충전하면, 유저 잔액이 충전 포인트만큼 늘어난다.")
     void recharge_point(){
         long pointAmount = 10000;
+        Point rechargePoint = new Point(pointAmount, PointType.RECHARGE);
         User user = setUser(1, 0);
-        pointService.rechargePoint(user, pointAmount);
-        userService.save(user);
+        pointService.recordPointTransaction(user.getUserId(), rechargePoint, LocalDateTime.now());
+//        userService.updateBalance(user);
 
 
         User userFound = userService.findById(user.getUserId());
@@ -49,30 +54,34 @@ class PointTransactionJPAIntegrationTest {
     void use_point(){
         //given
         long pointAmount = 10000;
-        long usePoint = 5000;
+        long usePointAmount = 5000;
 
+        Point usePoint = new Point(usePointAmount, PointType.USE);
         User user = setUser(1, pointAmount);
+        userService.save(user);
         //when
-        pointService.usePoint(user, usePoint);
+        pointService.recordPointTransaction(user.getUserId(), usePoint, LocalDateTime.now());
+        userService.updateBalance(user, usePoint);
         userService.save(user);
         //then
         User userFound = userService.findById(user.getUserId());
-        assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePoint);
+        assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePointAmount);
     }
 
     @Test
     @DisplayName("포인트가 부족할 경우 에러가 발생한다.")
     void cannot_use_point_larger_than_balance(){
         long balance = 1000;
-        long usePoint = 3000;
+        long usePointAmount = 3000;
 
+        Point usePoint = new Point(usePointAmount, PointType.USE);
         User user = setUser(1, balance);
         userService.save(user);
 
 
 
-        assertThrows(IllegalArgumentException.class,
-                () -> pointService.usePoint(user, usePoint));
+        assertThrows(NotEnoughBalanceException.class,
+                () -> userService.updateBalance(user, usePoint));
     }
 
     @Test
@@ -82,11 +91,14 @@ class PointTransactionJPAIntegrationTest {
         long userId = 1;
 
         User user = setUser(userId, 0);
-        long rechargePoint = 50000;
-        long usePoint = 30000;
+        long rechargePointAmount = 50000;
+        long usePointAmount = 30000;
 
-        pointService.rechargePoint(user, rechargePoint);
-        pointService.usePoint(user, usePoint);
+        Point rechargePoint = new Point(rechargePointAmount, PointType.RECHARGE);
+        Point usePoint = new Point(usePointAmount, PointType.USE);
+
+        pointService.recordPointTransaction(user.getUserId(), rechargePoint, LocalDateTime.now());
+        pointService.recordPointTransaction(user.getUserId(), usePoint, LocalDateTime.now());
         userService.save(user);
 
         List<PointTransaction> pointTransactionList = pointService.queryTransactions(userId);

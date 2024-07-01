@@ -1,8 +1,10 @@
 package hhplus.ticketing.point.unit;
 
 import hhplus.ticketing.domain.point.components.PointService;
+import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.point.models.PointTransaction;
 import hhplus.ticketing.domain.point.models.PointType;
+import hhplus.ticketing.base.exceptions.NotEnoughBalanceException;
 import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.point.infra.MemoryPointRepository;
 import hhplus.ticketing.domain.user.infra.MemoryUserRepository;
@@ -36,8 +38,9 @@ public class PointTransactionTest {
     @DisplayName("포인트를 충전한다.")
     void recharge_point(){
         long pointAmount = 10000;
+        Point point = new Point(pointAmount, PointType.RECHARGE);
         User user = setUser(1, 0);
-        user.rechargePoint(pointAmount);
+        user.updatePoint(point);
         userService.save(user);
 
         User userFound = userService.findById(user.getUserId());
@@ -50,28 +53,28 @@ public class PointTransactionTest {
     void use_point(){
         //given
         long pointAmount = 10000;
-        long usePoint = 5000;
+        Point usePoint = new Point( 5000, PointType.USE);
 
         User user = setUser(1, pointAmount);
         //when
-        user.usePoint(usePoint);
+        user.updatePoint(usePoint);
         userService.save(user);
 
         //then
         User userFound = userService.findById(user.getUserId());
-        Assertions.assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePoint);
+        Assertions.assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePoint.getAmount());
     }
 
     @Test
     @DisplayName("포인트가 부족할 경우 에러가 발생한다.")
     void cannot_use_point_larger_than_balance(){
         long balance = 1000;
-        long usePoint = 3000;
+        Point usePoint = new Point( 3000, PointType.USE);
 
         User user = setUser(1, balance);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> user.usePoint(usePoint));
+        assertThrows(NotEnoughBalanceException.class,
+                () -> user.updatePoint(usePoint));
     }
 
     @Test
@@ -82,17 +85,22 @@ public class PointTransactionTest {
         long userId = 1;
 
         User user = setUser(userId, 0);
-        long rechargePoint = 50000;
-        long usePoint = 30000;
+        long rechargePointAmount = 50000;
+        long usePointAmount = 30000;
 
-        pointService.rechargePoint(user, rechargePoint);
-        pointService.usePoint(user, usePoint);
+        Point rechargePoint = new Point(rechargePointAmount, PointType.RECHARGE);
+        Point usePoint = new Point(usePointAmount, PointType.USE);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        pointService.recordPointTransaction(user.getUserId(), rechargePoint, now);
+        pointService.recordPointTransaction(user.getUserId(), usePoint, now);
 
         Assertions.assertThat(pointService.queryTransactions(userId))
                 .isEqualTo(
                         List.of(
-                                new PointTransaction(userId, LocalDateTime.now(), 50000, PointType.RECHARGE),
-                                new PointTransaction(userId, LocalDateTime.now(),30000, PointType.USE)
+                                new PointTransaction(userId, now, 50000, PointType.RECHARGE),
+                                new PointTransaction(userId, now,30000, PointType.USE)
                         ));
     }
 

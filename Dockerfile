@@ -1,5 +1,5 @@
 # 1. Build Stage
-FROM gradle:7.3.3-jdk17 AS build
+FROM gradle:8.8-jdk17 AS build
 LABEL authors="esshi"
 # 2. Work Directory 설정
 WORKDIR /app
@@ -25,5 +25,5 @@ COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
 
 # 9. 애플리케이션 실행
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
 

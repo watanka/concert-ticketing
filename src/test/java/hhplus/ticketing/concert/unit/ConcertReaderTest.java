@@ -4,7 +4,7 @@ import hhplus.ticketing.domain.concert.components.ConcertReader;
 import hhplus.ticketing.domain.concert.components.ConcertWriter;
 import hhplus.ticketing.domain.concert.models.*;
 import hhplus.ticketing.domain.concert.infra.MemoryConcertRepository;
-import org.assertj.core.api.Assert;
+import hhplus.ticketing.domain.concert.repository.ConcertRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ConcertReaderTest {
 
-    private MemoryConcertRepository repository = new MemoryConcertRepository();
+    private ConcertRepository repository = new MemoryConcertRepository();
     private ConcertReader concertReader = new ConcertReader(repository);
     private ConcertWriter concertWriter = new ConcertWriter(repository);
 
@@ -33,14 +33,14 @@ public class ConcertReaderTest {
         ConcertHall jamsilConcertHall = ConcertHall.JAMSIL;
 
         ShowTime showTime = new ShowTime(concertId, time, jamsilConcertHall);
-        concertWriter.registerShowTime(concertId, showTime);
+        concertWriter.registerShowTime(showTime);
 
     }
 
     @Test
     @DisplayName("콘서트 정보를 조회한다.")
     void register_concert(){
-        Assertions.assertThat(concertReader.getConcert("뉴진스 단독 콘서트").getPerformerName())
+        Assertions.assertThat(concertReader.findConcert(0).getPerformerName())
                 .isEqualTo("뉴진스");
 
     }
@@ -48,8 +48,8 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("콘서트 목록을 반환한다.")
     void list_all_registered_concerts(){
-        Assertions.assertThat(concertReader.getConcertList().get(0).getConcertName())
-                .isEqualTo("뉴진스 단독 콘서트");
+        Assertions.assertThat(concertReader.getConcertList().get(0).getId())
+                .isEqualTo(0);
     }
 
 
@@ -63,20 +63,23 @@ public class ConcertReaderTest {
     @Test
     @DisplayName("예매가능한 좌석을 반환한다.")
     void list_available_seats(){
+        LocalDateTime showTime = LocalDateTime.now();
         for (int i=0; i<10;i++) {
-            Seat seat = new Seat(i,
-                                "아이유 10주년 콘서트",
-                                ConcertHall.JAMSIL,
-                                LocalDateTime.of(2024, 3, 3, 17,0),
-                                100000,
-                                SeatStatus.AVAILABLE);
+            Seat seat = Seat.builder()
+                    .seatNo(1)
+                    .concertName("아이유 10주년 콘서트")
+                    .concertHall(ConcertHall.JAMSIL)
+                    .showTime(showTime)
+                    .price(100000)
+                    .status(SeatStatus.AVAILABLE)
+                    .build();
             if (i>=5){
                 seat.updateStatus(SeatStatus.RESERVED);
             }
-            concertWriter.registerSeat(1, seat);
+            concertWriter.registerSeat(seat);
         }
 
-        List<Seat> seatList = concertReader.getAvailableSeats(1);
+        List<Seat> seatList = concertReader.getAvailableSeats(1, showTime );
         Assertions.assertThat(seatList.size()).isEqualTo(5);
         for (Seat seat : seatList) {
             Assertions.assertThat(seat.getStatus()).isEqualTo(SeatStatus.AVAILABLE);

@@ -1,14 +1,17 @@
 package hhplus.ticketing.domain.concert.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
+@Builder
 public class Seat {
     long seatNo;
+    long concertId;
     String concertName;
     ConcertHall concertHall;
     LocalDateTime showTime;

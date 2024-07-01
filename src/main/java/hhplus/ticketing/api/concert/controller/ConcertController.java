@@ -27,7 +27,7 @@ public class ConcertController {
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = ConcertListResponse.class))))
     ConcertListResponse getConcertList(@RequestHeader(name="Authorization") String token){
 
-        return new ConcertListResponse(List.of(new Concert("뉴진스 단독 콘서트", "뉴진스")));
+        return new ConcertListResponse(List.of(new Concert(1, "뉴진스 단독 콘서트", "뉴진스")));
     }
 
     @Operation(summary="공연시간 조회", description="콘서트 공연시간 리스트를 조회합니다.")
@@ -48,8 +48,8 @@ public class ConcertController {
                                  @PathVariable(name="showTimeId") long showTimeId){
         LocalDateTime time = LocalDateTime.of(2024, 6,26,15,0);
         return SeatListResponse.from(List.of(
-                new Seat(1, "아이유 10주년 콘서트", ConcertHall.JAMSIL, time, 300000, SeatStatus.AVAILABLE),
-                new Seat(1, "뉴진스 단독 콘서트", ConcertHall.LOTTE_TOWER, time, 200000, SeatStatus.AVAILABLE)
+                new Seat(1, 1,  "아이유 10주년 콘서트", ConcertHall.JAMSIL, time, 300000, SeatStatus.AVAILABLE),
+                new Seat(1, 2, "뉴진스 단독 콘서트", ConcertHall.LOTTE_TOWER, time, 200000, SeatStatus.AVAILABLE)
                 ));
 
     }

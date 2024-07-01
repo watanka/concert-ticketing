@@ -35,7 +35,7 @@ public class ConcertControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$.concertList[0].concertName")
+                        .andExpect(jsonPath("$.concertList[0].name")
                                 .value("뉴진스 단독 콘서트"))
                         .andExpect(jsonPath("$.concertList[0].performerName")
                             .value("뉴진스"));

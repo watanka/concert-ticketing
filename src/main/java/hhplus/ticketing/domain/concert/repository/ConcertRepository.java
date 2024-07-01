@@ -4,21 +4,22 @@ import hhplus.ticketing.domain.concert.models.Concert;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.ShowTime;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public interface ConcertRepositoryInterface {
+public interface ConcertRepository {
     Concert saveConcert(Concert concert);
 
     List<Concert> getConcertList();
 
 
-    ShowTime saveShowTime(long concertId, ShowTime showTime);
+    ShowTime saveShowTime(ShowTime showTime);
 
     List<ShowTime> getShowTimeListByConcertId(long concertId);
 
-    Seat saveSeat(long showTimeId, Seat seat);
+    public Seat saveSeat(Seat seat);
 
-    List<Seat> getAvailableSeatList(long concertId);
+    List<Seat> getAvailableSeatList(long concertId, LocalDateTime showTime);
 
-    Concert findConcertByName(String concertName);
+    Concert findConcertById(long concertId);
 }

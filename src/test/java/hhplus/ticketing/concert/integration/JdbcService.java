@@ -128,7 +128,6 @@ public class JdbcService {
                     .showTime(rs.getTimestamp("time").toLocalDateTime())
                     .concertName(rs.getString("concert_name"))
                     .concertHall(ConcertHall.valueOf(rs.getString("concert_hall")))
-                    .price(rs.getInt("price"))
                     .status(SeatStatus.to(rs.getBoolean("status")))
                     .build();
         });

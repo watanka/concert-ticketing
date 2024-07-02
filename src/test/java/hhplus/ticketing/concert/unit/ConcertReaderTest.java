@@ -73,7 +73,6 @@ public class ConcertReaderTest {
                     .concertName("아이유 10주년 콘서트")
                     .concertHall(ConcertHall.JAMSIL)
                     .showTime(showTime)
-                    .price(100000)
                     .status(SeatStatus.AVAILABLE)
                     .build();
             concertWriter.registerSeat(seat);

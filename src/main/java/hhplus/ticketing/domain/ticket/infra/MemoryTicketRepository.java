@@ -7,14 +7,18 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 
-@Repository
 public class MemoryTicketRepository implements TicketRepository {
 
     Map<Long, Ticket> tickets = new HashMap<>();
 
     @Override
-    public Ticket findById(long userId) {
+    public Ticket findByUserId(long userId) {
         return tickets.get(userId);
+    }
+
+    @Override
+    public Ticket findById(long ticketId) {
+        return null;
     }
 
     @Override

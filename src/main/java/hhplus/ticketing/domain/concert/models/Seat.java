@@ -15,7 +15,6 @@ public class Seat {
     String concertName;
     ConcertHall concertHall;
     LocalDateTime showTime;
-    long price;
     SeatStatus status;
 
     public boolean isAvailable(){

@@ -10,7 +10,6 @@ public record SeatResponse(long seatNo, long price, String status) {
     public static SeatResponse from(Seat seat){
         return SeatResponse.builder()
                 .seatNo(seat.getSeatNo())
-                .price(seat.getPrice())
                 .status(seat.getStatus().toString())
                 .build();
 

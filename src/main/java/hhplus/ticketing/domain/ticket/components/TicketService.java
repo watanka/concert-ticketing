@@ -3,29 +3,32 @@ package hhplus.ticketing.domain.ticket.components;
 import hhplus.ticketing.base.exceptions.UnavailableSeatException;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.concert.models.Seat;
-import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class TicketService {
 
+    @Autowired
     private final TicketRepository ticketRepository;
 
-    public TicketService(TicketRepository ticketRepository) {
-        this.ticketRepository = ticketRepository;
-    }
-
-    public Ticket register(User user, Seat seat) {
+    public Ticket register(long userId, long price, Seat seat) {
         if (!seat.isAvailable()){
             throw new UnavailableSeatException();
         }
-        return ticketRepository.save(new Ticket(seat, user));
+        return ticketRepository.save(new Ticket(seat, price, userId));
 
     }
-    public Ticket query(long userId) {
-        return ticketRepository.findById(userId);
+    public Ticket findByUserId(long userId) {
+        return ticketRepository.findByUserId(userId);
+    }
+
+    public Ticket findById(long ticketId){
+        return ticketRepository.findById(ticketId);
     }
 
     public Ticket confirmPayment(Ticket ticket){

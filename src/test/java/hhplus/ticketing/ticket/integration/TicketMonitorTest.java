@@ -15,7 +15,7 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
-public class TicketTest {
+public class TicketMonitorTest {
 
     @SpyBean
     private TicketMonitor ticketMonitor;

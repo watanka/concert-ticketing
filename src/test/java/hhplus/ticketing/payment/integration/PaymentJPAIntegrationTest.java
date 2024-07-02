@@ -1,4 +1,4 @@
-package hhplus.ticketing.payment.unit;
+package hhplus.ticketing.payment.integration;
 
 import hhplus.ticketing.base.exceptions.InsufficientBalanceException;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
@@ -6,14 +6,18 @@ import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.payment.components.PaymentService;
 import hhplus.ticketing.domain.payment.models.PaymentTransaction;
+import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.ticket.components.TicketService;
 import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;
-import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
+import hhplus.ticketing.domain.user.components.UserService;
+import hhplus.ticketing.domain.user.models.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,9 +25,20 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PaymentTest {
+@SpringBootTest
+public class PaymentJPAIntegrationTest {
 
-    PaymentService paymentService = new PaymentService();
+    @Autowired
+    PaymentService paymentService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    PointService pointService;
+
+    @Autowired
+    TicketService ticketService;
 
     private Seat setSeat(long price) {
         return  Seat.builder()
@@ -64,8 +79,8 @@ public class PaymentTest {
         Ticket ticket = new Ticket(seat, user);
 
         paymentService.processPayment(ticket, user, LocalDateTime.now());
-
-        assertThat(user.getBalance()).isEqualTo(100000);
+        User foundUser = userService.findById(user.getUserId());
+        assertThat(foundUser.getBalance()).isEqualTo(100000);
     }
 
     @Test
@@ -75,9 +90,11 @@ public class PaymentTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user, LocalDateTime.now());
 
-        assertThat(ticket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
+        paymentService.processPayment(ticket, user, LocalDateTime.now());
+        Ticket foundTicket = ticketService.query(user.getUserId());
+
+        assertThat(foundTicket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
     }
 
     @Test
@@ -89,6 +106,7 @@ public class PaymentTest {
 
         paymentService.processPayment(ticket, user, LocalDateTime.now());
 
+        paymentService.recordPaymentTransaction(ticket, user);
         List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getUserId());
 
         PaymentTransaction transaction = transactions.get(0);
@@ -97,6 +115,5 @@ public class PaymentTest {
         Assertions.assertThat(transaction.price()).isEqualTo(ticket.getPrice());
         Assertions.assertThat(transaction.ticketId()).isEqualTo(ticket.getId());
     }
-
 
 }

@@ -2,10 +2,12 @@ package hhplus.ticketing.domain.ticket.infra;
 
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class MemoryTicketRepository implements TicketRepository {
 
     Map<Long, Ticket> tickets = new HashMap<>();

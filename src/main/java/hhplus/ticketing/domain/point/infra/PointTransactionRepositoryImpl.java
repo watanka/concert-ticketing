@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class PointTransactionImpl implements PointRepository {
+public class PointTransactionRepositoryImpl implements PointRepository {
     @Autowired
     private final PointTransactionJPARepository pointTransactionJPARepository;
 

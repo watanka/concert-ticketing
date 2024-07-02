@@ -16,6 +16,7 @@ import hhplus.ticketing.domain.ticket.components.TicketService;
 import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -24,34 +25,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
-
     @Autowired
-    PointService pointService;
-
-
-    @Autowired
-    TicketService ticketService;
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    PaymentTransactionRepository paymentTransactionRepository;
-
-
-    public PaymentTransaction processPayment(Ticket ticket, User user, LocalDateTime time) {
-        Point payPoint = new Point(ticket.getPrice(), PointType.USE);
-
-        userService.updateBalance(user, payPoint);
-
-        pointService.recordPointTransaction(user.getUserId(), payPoint, time);
-        ticketService.confirmPayment(ticket);
-
-        PaymentTransaction paymentTransaction = recordPaymentTransaction(ticket, user);
-
-        return paymentTransaction;
-    }
+    private final PaymentTransactionRepository paymentTransactionRepository;
 
     public List<PaymentTransaction> findTransactionHistory(long userId) {
         return paymentTransactionRepository.findByUserId(userId);

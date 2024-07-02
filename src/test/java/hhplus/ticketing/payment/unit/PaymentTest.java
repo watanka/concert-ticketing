@@ -1,13 +1,19 @@
 package hhplus.ticketing.payment.unit;
 
+import hhplus.ticketing.api.payment.facade.PaymentFacade;
 import hhplus.ticketing.base.exceptions.InsufficientBalanceException;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.payment.components.PaymentService;
+import hhplus.ticketing.domain.payment.infra.MemoryPaymentTransactionRepository;
 import hhplus.ticketing.domain.payment.models.PaymentTransaction;
+import hhplus.ticketing.domain.point.components.PointService;
+import hhplus.ticketing.domain.point.infra.MemoryPointRepository;
 import hhplus.ticketing.domain.ticket.components.TicketService;
 import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;
+import hhplus.ticketing.domain.user.components.UserService;
+import hhplus.ticketing.domain.user.infra.MemoryUserRepository;
 import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
@@ -23,7 +29,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PaymentTest {
 
-    PaymentService paymentService = new PaymentService();
+    MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
+    UserService userService = new UserService(memoryUserRepository);
+
+    MemoryTicketRepository memoryTicketRepository = new MemoryTicketRepository();
+    TicketService ticketService = new TicketService(memoryTicketRepository);
+
+    MemoryPointRepository memoryPointRepository = new MemoryPointRepository();
+    PointService pointService = new PointService(memoryPointRepository);
+
+    MemoryPaymentTransactionRepository memoryPaymentTransactionRepository = new MemoryPaymentTransactionRepository();
+    PaymentService paymentService = new PaymentService(memoryPaymentTransactionRepository);
+    PaymentFacade paymentFacade = new PaymentFacade(userService, ticketService, pointService, paymentService);
 
     private Seat setSeat(long price) {
         return  Seat.builder()
@@ -53,7 +70,7 @@ public class PaymentTest {
 
 
         assertThrows(InsufficientBalanceException.class, () ->
-                paymentService.processPayment(ticket, user, LocalDateTime.now()));
+                paymentFacade.processPayment(ticket, user, LocalDateTime.now()));
     }
 
     @Test
@@ -63,7 +80,8 @@ public class PaymentTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user, LocalDateTime.now());
+        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
+
 
         assertThat(user.getBalance()).isEqualTo(100000);
     }
@@ -75,7 +93,7 @@ public class PaymentTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user, LocalDateTime.now());
+        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
         assertThat(ticket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
     }
@@ -87,7 +105,7 @@ public class PaymentTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user, LocalDateTime.now());
+        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
         List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getUserId());
 

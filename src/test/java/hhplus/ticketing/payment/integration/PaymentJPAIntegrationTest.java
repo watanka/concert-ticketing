@@ -8,11 +8,11 @@ import hhplus.ticketing.domain.payment.components.PaymentService;
 import hhplus.ticketing.domain.payment.models.PaymentTransaction;
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.ticket.components.TicketService;
-import hhplus.ticketing.domain.ticket.infra.MemoryTicketRepository;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.user.components.UserService;
 import hhplus.ticketing.domain.user.models.User;
+import hhplus.ticketing.api.payment.facade.PaymentFacade;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +39,9 @@ public class PaymentJPAIntegrationTest {
 
     @Autowired
     TicketService ticketService;
+
+    @Autowired
+    PaymentFacade paymentFacade;
 
     private Seat setSeat(long price) {
         return  Seat.builder()
@@ -68,7 +71,7 @@ public class PaymentJPAIntegrationTest {
 
 
         assertThrows(InsufficientBalanceException.class, () ->
-                paymentService.processPayment(ticket, user, LocalDateTime.now()));
+                paymentFacade.processPayment(ticket, user, LocalDateTime.now()));
     }
 
     @Test
@@ -78,7 +81,7 @@ public class PaymentJPAIntegrationTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user, LocalDateTime.now());
+        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
         User foundUser = userService.findById(user.getUserId());
         assertThat(foundUser.getBalance()).isEqualTo(100000);
     }
@@ -91,7 +94,7 @@ public class PaymentJPAIntegrationTest {
         Ticket ticket = new Ticket(seat, user);
 
 
-        paymentService.processPayment(ticket, user, LocalDateTime.now());
+        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
         Ticket foundTicket = ticketService.query(user.getUserId());
 
         assertThat(foundTicket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
@@ -104,9 +107,7 @@ public class PaymentJPAIntegrationTest {
         Seat seat = setSeat(100000);
         Ticket ticket = new Ticket(seat, user);
 
-        paymentService.processPayment(ticket, user, LocalDateTime.now());
-
-        paymentService.recordPaymentTransaction(ticket, user);
+        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
         List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getUserId());
 
         PaymentTransaction transaction = transactions.get(0);

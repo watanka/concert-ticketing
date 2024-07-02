@@ -1,30 +1,47 @@
 package hhplus.ticketing.domain.ticket.infra;
 
+import com.github.ansell.jdefaultdict.JDefaultDict;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
-import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MemoryTicketRepository implements TicketRepository {
 
-    Map<Long, Ticket> tickets = new HashMap<>();
+    Map<Long, Ticket> ticketByUserIdMap = new HashMap<>();
+    Map<Long, Ticket> ticketByIdMap = new HashMap<>();
+    Map<String, List<Ticket>> ticketsByConcertIdAndShowTimeMap = new JDefaultDict<>(k -> new ArrayList<>());
 
     @Override
     public Ticket findByUserId(long userId) {
-        return tickets.get(userId);
+        return ticketByUserIdMap.get(userId);
+    }
+
+    @Override
+    public List<Ticket> findByConcertIdAndShowTime(long concertId, LocalDateTime showTime) {
+        return ticketsByConcertIdAndShowTimeMap.get(createShowTimeKey(concertId, showTime));
     }
 
     @Override
     public Ticket findById(long ticketId) {
-        return null;
+        return ticketByIdMap.get(ticketId);
     }
 
     @Override
     public Ticket save(Ticket ticket) {
-        tickets.put(ticket.getUserId(), ticket);
+        ticketByUserIdMap.put(ticket.getUserId(), ticket);
+        ticketByIdMap.put(ticket.getId(), ticket);
+        List<Ticket> ticketList = ticketsByConcertIdAndShowTimeMap.get(createShowTimeKey(ticket.getId(), ticket.getShowTime()));
+        ticketList.add(ticket);
         return ticket;
+    }
+
+    private String createShowTimeKey(long concertId, LocalDateTime showTime) {
+        return concertId + "_" + showTime.toString();
     }
 
 

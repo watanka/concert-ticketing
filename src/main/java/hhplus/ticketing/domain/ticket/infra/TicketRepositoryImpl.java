@@ -5,6 +5,9 @@ import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 public class TicketRepositoryImpl implements TicketRepository {
 
@@ -16,6 +19,15 @@ public class TicketRepositoryImpl implements TicketRepository {
         TicketEntity ticketEntity = ticketJPARepository.findByUserId(userId);
 
         return TicketEntity.to(ticketEntity);
+    }
+
+    @Override
+    public List<Ticket> findByConcertIdAndShowTime(long concertId, LocalDateTime showTime){
+        List<TicketEntity> ticketEntityList = ticketJPARepository.findByConcertIdAndShowTime(concertId, showTime);
+
+        return ticketEntityList.stream()
+                .map(TicketEntity::to)
+                .toList();
     }
 
     @Override

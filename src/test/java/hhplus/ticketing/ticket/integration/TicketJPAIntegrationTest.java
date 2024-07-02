@@ -9,7 +9,6 @@ import hhplus.ticketing.domain.ticket.components.TicketService;
 import hhplus.ticketing.domain.ticket.infra.TicketJPARepository;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
-import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 import hhplus.ticketing.domain.user.models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,7 +61,7 @@ public class TicketJPAIntegrationTest {
     @Test
     @DisplayName("좌석이 이미 예약되었을 경우, 예약할 수 없다.")
     void cannot_reserve_if_seat_is_already_taken(){
-        seat.updateStatus(SeatStatus.RESERVED);
+        ticketService.register(user.getUserId(),100000, seat);
 
         assertThrows(UnavailableSeatException.class, () ->
                 ticketService.register(user.getUserId(),100000, seat));

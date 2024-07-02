@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TicketService {
@@ -16,10 +18,17 @@ public class TicketService {
     @Autowired
     private final TicketRepository ticketRepository;
 
+    public boolean isReserved(Seat seat){
+        List<Ticket> ticketList = ticketRepository.findByConcertIdAndShowTime(seat.getConcertId(), seat.getShowTime());
+        return ticketList.stream()
+                .anyMatch(ticket -> ticket.getSeatNo() == seat.getSeatNo());
+    }
+
     public Ticket register(long userId, long price, Seat seat) {
-        if (!seat.isAvailable()){
+        if (isReserved(seat)){
             throw new UnavailableSeatException();
         }
+
         return ticketRepository.save(new Ticket(seat, price, userId));
 
     }

@@ -6,7 +6,9 @@ import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TicketService {
 
     private final TicketRepository ticketRepository;
@@ -28,6 +30,7 @@ public class TicketService {
 
     public Ticket confirmPayment(Ticket ticket){
         ticket.updateStatus(TicketStatus.REGISTERED);
+        ticketRepository.save(ticket);
         return ticket;
     }
 }

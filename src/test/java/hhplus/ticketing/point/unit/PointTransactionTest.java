@@ -1,10 +1,10 @@
 package hhplus.ticketing.point.unit;
 
+import hhplus.ticketing.base.exceptions.InsufficientBalanceException;
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.point.models.PointTransaction;
 import hhplus.ticketing.domain.point.models.PointType;
-import hhplus.ticketing.base.exceptions.NotEnoughBalanceException;
 import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.domain.point.infra.MemoryPointRepository;
 import hhplus.ticketing.domain.user.infra.MemoryUserRepository;
@@ -73,7 +73,7 @@ public class PointTransactionTest {
 
         User user = setUser(1, balance);
 
-        assertThrows(NotEnoughBalanceException.class,
+        assertThrows(InsufficientBalanceException.class,
                 () -> user.updatePoint(usePoint));
     }
 

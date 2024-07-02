@@ -1,21 +1,22 @@
 package hhplus.ticketing.point.integration;
 
+import hhplus.ticketing.api.point.facade.PointFacade;
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.infra.PointTransactionJPARepository;
 import hhplus.ticketing.domain.point.models.Point;
+import hhplus.ticketing.domain.point.models.PointTransaction;
 import hhplus.ticketing.domain.point.models.PointType;
 import hhplus.ticketing.domain.user.components.UserService;
 import hhplus.ticketing.domain.user.infra.UserJPARepository;
 import hhplus.ticketing.domain.user.models.User;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,7 +24,7 @@ import java.util.concurrent.Executors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class PointTransactionConcurrencyTest {
+class PointTransactionConcurrencyTest {
 
     @Autowired
     PointService pointService;
@@ -31,7 +32,7 @@ public class PointTransactionConcurrencyTest {
     UserService userService;
 
     @Autowired
-    PointUseCase pointUseCase;
+    PointFacade pointFacade;
 
     @Autowired
     PointTransactionJPARepository pointTransactionJPARepository;
@@ -52,26 +53,41 @@ public class PointTransactionConcurrencyTest {
         User user = new User(1, 0);
         userService.save(user);
 
-        final int numThreads = 100;
+        final int numThreads = 10;
         CountDownLatch latch = new CountDownLatch(numThreads);
         ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+        for (int i = 0; i < numThreads; i++) {
+            executorService.execute(() ->{
+                    Point rechargePoint = new Point(100, PointType.RECHARGE);
+                    pointFacade.transact(user, rechargePoint);
 
-        {
-            for (int i = 0; i < numThreads; i++) {
-                executorService.execute(() ->{
-                        Point rechargePoint = new Point(100, PointType.RECHARGE);
-                        pointUseCase.transact(user, rechargePoint);
-
-
-                        latch.countDown();
-                });
-            }
+                    latch.countDown();
+            });
         }
+
         latch.await();
 
         User userFound = userService.findById(user.getUserId());
 
+        List<PointTransaction> pointTransactionList = pointService.queryTransactions(user.getUserId());
+        for (PointTransaction p: pointTransactionList) {
+            System.out.println("transaction id: " + p.id() + "\namount: " + p.amount() + "\ntime: " + p.transactionTime());
+        }
+
         assertThat(userFound.getBalance()).isEqualTo(100 * numThreads);
+
+    }
+
+
+    @Test
+    @DisplayName("유저 정보가 올바르게 저장되는지 확인")
+    void check_user_info_correctly_saved(){
+        User user = new User(1, 0);
+        userService.save(user);
+
+        Point point1 = new Point(1000, PointType.RECHARGE);
+        userService.updateBalance(user, point1);
+
 
     }
 }

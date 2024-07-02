@@ -1,22 +1,25 @@
-package hhplus.ticketing.point.integration;
+package hhplus.ticketing.api.point.facade;
 
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.user.components.UserService;
 import hhplus.ticketing.domain.user.models.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Service
-public class PointUseCase {
+@Component
+@RequiredArgsConstructor
+public class PointFacade {
     @Autowired
-    PointService pointService;
+    private final PointService pointService;
 
     @Autowired
-    UserService userService;
+    private final UserService userService;
 
+    @DistributedLock(key="#user.getUserId()")
     public void transact(User user, Point point) {
         pointService.recordPointTransaction(user.getUserId(), point, LocalDateTime.now());
         userService.updateBalance(user, point);

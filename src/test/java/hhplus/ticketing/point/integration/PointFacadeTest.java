@@ -1,6 +1,7 @@
 package hhplus.ticketing.point.integration;
 
-import hhplus.ticketing.base.exceptions.NotEnoughBalanceException;
+import hhplus.ticketing.api.point.facade.PointFacade;
+import hhplus.ticketing.base.exceptions.InsufficientBalanceException;
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.infra.PointTransactionJPARepository;
 import hhplus.ticketing.domain.point.models.Point;
@@ -21,9 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class PointUseCaseTest {
+public class PointFacadeTest {
     @Autowired
-    PointUseCase pointUseCase;
+    PointFacade pointFacade;
 
     @Autowired
     PointService pointService;
@@ -54,7 +55,7 @@ public class PointUseCaseTest {
         long pointAmount = 10000;
         Point rechargePoint = new Point(pointAmount, PointType.RECHARGE);
         User user = setUser(1, 0);
-        pointUseCase.transact(user, rechargePoint);
+        pointFacade.transact(user, rechargePoint);
 
 
         User userFound = userService.findById(user.getUserId());
@@ -74,7 +75,7 @@ public class PointUseCaseTest {
         Point usePoint = new Point(usePointAmount, PointType.USE);
         User user = setUser(1, pointAmount);
         //when
-        pointUseCase.transact(user, usePoint);
+        pointFacade.transact(user, usePoint);
         //then
         User userFound = userService.findById(user.getUserId());
         assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePointAmount);
@@ -92,8 +93,8 @@ public class PointUseCaseTest {
 
 
 
-        assertThrows(NotEnoughBalanceException.class,
-                () -> pointUseCase.transact(user, usePoint));
+        assertThrows(InsufficientBalanceException.class,
+                () -> pointFacade.transact(user, usePoint));
     }
 
     @Test
@@ -109,8 +110,8 @@ public class PointUseCaseTest {
         Point rechargePoint = new Point(rechargePointAmount, PointType.RECHARGE);
         Point usePoint = new Point(usePointAmount, PointType.USE);
 
-        pointUseCase.transact(user, rechargePoint);
-        pointUseCase.transact(user, usePoint);
+        pointFacade.transact(user, rechargePoint);
+        pointFacade.transact(user, usePoint);
 
         List<PointTransaction> pointTransactionList = pointService.queryTransactions(userId);
         assertThat(pointTransactionList).hasSize(2);

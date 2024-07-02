@@ -1,6 +1,6 @@
 package hhplus.ticketing.point.integration;
 
-import hhplus.ticketing.base.exceptions.NotEnoughBalanceException;
+import hhplus.ticketing.base.exceptions.InsufficientBalanceException;
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.infra.PointTransactionJPARepository;
 import hhplus.ticketing.domain.point.models.Point;
@@ -97,7 +97,7 @@ class PointTransactionJPAIntegrationTest {
 
 
 
-        assertThrows(NotEnoughBalanceException.class,
+        assertThrows(InsufficientBalanceException.class,
                 () -> userService.updateBalance(user, usePoint));
     }
 

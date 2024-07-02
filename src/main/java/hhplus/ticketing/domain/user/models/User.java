@@ -18,15 +18,20 @@ public class User {
     }
 
     public void updatePoint(Point point) {
-        if (point.getType() == PointType.RECHARGE){
-            balance += point.getAmount();
-        }else{
-            if (point.getAmount() > balance){
-                throw new NotEnoughBalanceException();
-            }
-            balance -= point.getAmount();
-        }
+        if (point.getType() == PointType.RECHARGE) rechargePoint(point);
 
+        else if (point.getType() == PointType.USE) {
+            if (point.getAmount() > balance) throw new NotEnoughBalanceException();
+            usePoint(point);
+        }
+    }
+
+    private void rechargePoint(Point point){
+        this.balance += point.getAmount();
+    }
+
+    private void usePoint(Point point){
+        this.balance -= point.getAmount();
     }
 
 

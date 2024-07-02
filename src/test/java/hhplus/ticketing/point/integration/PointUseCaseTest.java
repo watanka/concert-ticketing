@@ -6,24 +6,25 @@ import hhplus.ticketing.domain.point.infra.PointTransactionJPARepository;
 import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.point.models.PointTransaction;
 import hhplus.ticketing.domain.point.models.PointType;
+import hhplus.ticketing.domain.user.components.UserService;
 import hhplus.ticketing.domain.user.infra.UserJPARepository;
 import hhplus.ticketing.domain.user.models.User;
-import hhplus.ticketing.domain.user.components.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 @SpringBootTest
-class PointTransactionJPAIntegrationTest {
+public class PointUseCaseTest {
+    @Autowired
+    PointUseCase pointUseCase;
+
     @Autowired
     PointService pointService;
     @Autowired
@@ -41,7 +42,6 @@ class PointTransactionJPAIntegrationTest {
         userJPARepository.deleteAll();
     }
 
-
     private User setUser(long userId, long balance){
         return new User(userId, balance);
     }
@@ -54,9 +54,7 @@ class PointTransactionJPAIntegrationTest {
         long pointAmount = 10000;
         Point rechargePoint = new Point(pointAmount, PointType.RECHARGE);
         User user = setUser(1, 0);
-        userService.save(user);
-        pointService.recordPointTransaction(user.getUserId(), rechargePoint, LocalDateTime.now());
-        userService.updateBalance(user, rechargePoint);
+        pointUseCase.transact(user, rechargePoint);
 
 
         User userFound = userService.findById(user.getUserId());
@@ -75,11 +73,8 @@ class PointTransactionJPAIntegrationTest {
 
         Point usePoint = new Point(usePointAmount, PointType.USE);
         User user = setUser(1, pointAmount);
-        userService.save(user);
         //when
-        pointService.recordPointTransaction(user.getUserId(), usePoint, LocalDateTime.now());
-        userService.updateBalance(user, usePoint);
-        userService.save(user);
+        pointUseCase.transact(user, usePoint);
         //then
         User userFound = userService.findById(user.getUserId());
         assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePointAmount);
@@ -98,7 +93,7 @@ class PointTransactionJPAIntegrationTest {
 
 
         assertThrows(NotEnoughBalanceException.class,
-                () -> userService.updateBalance(user, usePoint));
+                () -> pointUseCase.transact(user, usePoint));
     }
 
     @Test
@@ -114,13 +109,11 @@ class PointTransactionJPAIntegrationTest {
         Point rechargePoint = new Point(rechargePointAmount, PointType.RECHARGE);
         Point usePoint = new Point(usePointAmount, PointType.USE);
 
-        pointService.recordPointTransaction(user.getUserId(), rechargePoint, LocalDateTime.now());
-        pointService.recordPointTransaction(user.getUserId(), usePoint, LocalDateTime.now());
-        userService.save(user);
+        pointUseCase.transact(user, rechargePoint);
+        pointUseCase.transact(user, usePoint);
 
         List<PointTransaction> pointTransactionList = pointService.queryTransactions(userId);
         assertThat(pointTransactionList).hasSize(2);
         assertThat(pointTransactionList.get(0).amount()).isEqualTo(rechargePoint.getAmount());
     }
-
 }

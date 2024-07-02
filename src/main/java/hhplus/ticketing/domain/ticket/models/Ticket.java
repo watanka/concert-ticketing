@@ -3,7 +3,7 @@ package hhplus.ticketing.domain.ticket.models;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
-import hhplus.ticketing.domain.point.models.User;
+import hhplus.ticketing.domain.user.models.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

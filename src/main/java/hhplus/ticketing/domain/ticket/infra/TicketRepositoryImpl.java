@@ -3,6 +3,7 @@ package hhplus.ticketing.domain.ticket.infra;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -10,10 +11,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class TicketRepositoryImpl implements TicketRepository {
 
     @Autowired
-    TicketJPARepository ticketJPARepository;
+    private final TicketJPARepository ticketJPARepository;
 
     @Override
     public Ticket findByUserId(long userId) {

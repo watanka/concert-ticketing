@@ -1,6 +1,5 @@
 package hhplus.ticketing.domain.ticket.infra;
 
-import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

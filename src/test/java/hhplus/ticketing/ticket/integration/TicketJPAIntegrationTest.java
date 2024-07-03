@@ -6,6 +6,7 @@ import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.ticket.components.TicketMonitor;
 import hhplus.ticketing.domain.ticket.components.TicketService;
+import hhplus.ticketing.domain.ticket.infra.TicketEntity;
 import hhplus.ticketing.domain.ticket.infra.TicketJPARepository;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;

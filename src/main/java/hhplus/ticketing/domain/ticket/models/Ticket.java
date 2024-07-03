@@ -2,6 +2,7 @@ package hhplus.ticketing.domain.ticket.models;
 
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
+import hhplus.ticketing.domain.concert.models.SeatStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class Ticket {
         this.userId = userId;
         this.price = price;
         this.seat = seat;
+        seat.updateStatus(SeatStatus.RESERVED);
         this.status = TicketStatus.PENDING;
         this.reservedTime = reservedTime;
     }

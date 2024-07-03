@@ -1,7 +1,9 @@
-package hhplus.ticketing.watingqueue.unit;
+package hhplus.ticketing.watingqueue.integration;
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
-import hhplus.ticketing.domain.watingqueue.components.*;
+import hhplus.ticketing.domain.watingqueue.components.TokenGenerator;
+import hhplus.ticketing.domain.watingqueue.components.QueueManager;
+import hhplus.ticketing.domain.watingqueue.components.WaitingQueueService;
 import hhplus.ticketing.domain.watingqueue.infra.MemoryTokenGenerator;
 import hhplus.ticketing.domain.watingqueue.infra.MemoryQueueManager;
 import hhplus.ticketing.domain.watingqueue.models.Token;
@@ -12,12 +14,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class WaitingQueueTest {
-
+public class WaitingQueueJedisTest {
 
     TokenGenerator tokenGenerator = new MemoryTokenGenerator();
     QueueManager queueManager = new MemoryQueueManager();

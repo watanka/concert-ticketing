@@ -1,38 +1,24 @@
 package hhplus.ticketing.domain.watingqueue.models;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
+@AllArgsConstructor
+@Getter
 public class Token {
 
+    long concertId;
     String claim;
     long userId;
     TokenStatus status;
     LocalDateTime issuedAt;
 
-    public Token(String claim, long userId, LocalDateTime issuedAt) {
-        this.claim = claim;
-        this.userId = userId;
-        this.status = TokenStatus.WAITING;
-        this.issuedAt = issuedAt;
-    }
-
-    public String getClaim() {
-        return claim;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public TokenStatus getStatus() {
-        return status;
-    }
-
     public void updateStatus(TokenStatus status){
         this.status = status;
     }
-
-    public LocalDateTime getIssuedAt() {
-        return issuedAt;
+    public long getTimeScale(){
+        return issuedAt.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 }

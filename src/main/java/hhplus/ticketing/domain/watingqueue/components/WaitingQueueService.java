@@ -5,20 +5,20 @@ import hhplus.ticketing.base.exceptions.InvalidTokenException;
 import hhplus.ticketing.domain.watingqueue.models.Token;
 import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
 import hhplus.ticketing.domain.watingqueue.repository.TokenRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class WaitingQueueService {
-
-    TokenGenerator tokenGenerator;
-    TokenRepository tokenRepository;
-
-    public WaitingQueueService(TokenGenerator tokenGenerator, TokenRepository tokenRepository) {
-        this.tokenGenerator = tokenGenerator;
-        this.tokenRepository = tokenRepository;
-    }
-
+    @Autowired
+    private final TokenGenerator tokenGenerator;
+    @Autowired
+    private final QueueManager queueManager;
 
     public WaitingInfo query(Token token) {
-        WaitingInfo waitingInfo = tokenRepository.getWaitingInfoByToken(token);
+        WaitingInfo waitingInfo = queueManager.getWaitingInfoByToken(token);
 
         if (waitingInfo == null){
             throw new InvalidTokenException();
@@ -27,10 +27,10 @@ public class WaitingQueueService {
 
     }
 
-    public Token register(long userId) {
+    public Token register(long concertId, long userId) {
 
-        Token token = tokenGenerator.issue(userId);
-        tokenRepository.save(token);
+        Token token = tokenGenerator.issue(concertId, userId);
+        queueManager.insertInWaitingQueue(token);
         return token;
     }
 

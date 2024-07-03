@@ -58,7 +58,7 @@ public class PointFacadeTest {
         pointFacade.transact(user, rechargePoint);
 
 
-        User userFound = userService.findById(user.getUserId());
+        User userFound = userService.findById(user.getId());
 
 
         assertThat(userFound.getBalance()).isEqualTo(pointAmount);
@@ -77,7 +77,7 @@ public class PointFacadeTest {
         //when
         pointFacade.transact(user, usePoint);
         //then
-        User userFound = userService.findById(user.getUserId());
+        User userFound = userService.findById(user.getId());
         assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePointAmount);
     }
 

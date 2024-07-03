@@ -79,7 +79,6 @@ public class ConcertReaderIntegrationTest {
                                 2, "아이유 10주년 콘서트",
                                  ConcertHall.JAMSIL,
                                  showTime,
-                                100000,
                                  SeatStatus.AVAILABLE);
             concertWriter.registerSeat(seat);
             }

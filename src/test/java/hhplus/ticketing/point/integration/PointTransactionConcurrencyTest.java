@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -67,9 +66,9 @@ class PointTransactionConcurrencyTest {
 
         latch.await();
 
-        User userFound = userService.findById(user.getUserId());
+        User userFound = userService.findById(user.getId());
 
-        List<PointTransaction> pointTransactionList = pointService.queryTransactions(user.getUserId());
+        List<PointTransaction> pointTransactionList = pointService.queryTransactions(user.getId());
         for (PointTransaction p: pointTransactionList) {
             System.out.println("transaction id: " + p.id() + "\namount: " + p.amount() + "\ntime: " + p.transactionTime());
         }

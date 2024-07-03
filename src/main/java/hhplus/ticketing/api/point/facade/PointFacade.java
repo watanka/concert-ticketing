@@ -21,7 +21,7 @@ public class PointFacade {
 
     @DistributedLock(key="#user.getUserId()")
     public void transact(User user, Point point) {
-        pointService.recordPointTransaction(user.getUserId(), point, LocalDateTime.now());
+        pointService.recordPointTransaction(user.getId(), point, LocalDateTime.now());
         userService.updateBalance(user, point);
     }
 }

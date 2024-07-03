@@ -12,7 +12,7 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-        return userMap.put(user.getUserId(), user);
+        return userMap.put(user.getId(), user);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package hhplus.ticketing.point.integration;
 
 import hhplus.ticketing.api.point.facade.DistributedLock;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 @Aspect
+@RequiredArgsConstructor
 @Component
 public class DistributedLockAop {
     private static final String REDISSON_LOCK_PREFIX="LOCK:";
@@ -19,12 +22,8 @@ public class DistributedLockAop {
     private final RedissonClient redissonClient;
     private final AopForTransaction aopForTransaction;
 
-    public DistributedLockAop(RedissonClient redissonClient, AopForTransaction aopForTransaction) {
-        this.redissonClient = redissonClient;
-        this.aopForTransaction = aopForTransaction;
-    }
-
-    @Around("@annotation(hhplus.ticketing.api.point.facade.PointFacade.DistributedLock)")
+    @Around("@annotation(hhplus.ticketing.api.point.facade.PointFacade.DistributedLock) ||" +
+            " @annotation(hhplus.ticketing.domain.ticket.components.TicketService.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable{
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

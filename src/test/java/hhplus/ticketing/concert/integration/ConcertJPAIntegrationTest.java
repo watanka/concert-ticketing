@@ -90,12 +90,12 @@ public class ConcertJPAIntegrationTest {
 
         LocalDateTime time = LocalDateTime.of(2024, 3, 3, 17,0);
         for (int i=0; i<5;i++) {
-            SeatEntity seat = new SeatEntity(1, time, i, "아이유 10주년 콘서트", ConcertHall.JAMSIL, 200000, SeatStatus.AVAILABLE);
+            SeatEntity seat = new SeatEntity(1, time, i, "아이유 10주년 콘서트", ConcertHall.JAMSIL, SeatStatus.AVAILABLE);
             seatJPARepository.save(seat);
         }
 
         for (int i=5; i<10;i++) {
-            SeatEntity seat = new SeatEntity(1, time, i, "아이유 10주년 콘서트", ConcertHall.JAMSIL, 200000, SeatStatus.RESERVED);
+            SeatEntity seat = new SeatEntity(1, time, i, "아이유 10주년 콘서트", ConcertHall.JAMSIL, SeatStatus.RESERVED);
             seatJPARepository.save(seat);
         }
 

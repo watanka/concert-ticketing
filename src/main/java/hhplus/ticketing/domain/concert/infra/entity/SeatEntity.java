@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Entity(name="seat")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Entity
 @Builder
 @IdClass(SeatEntityId.class)
 public class SeatEntity {
@@ -41,11 +41,6 @@ public class SeatEntity {
     @Column(name="concert_hall")
     private ConcertHall concertHall;
 
-
-
-    @Column(name="price")
-    private long price;
-
     @Column(name="status")
     private SeatStatus status;
 
@@ -57,7 +52,6 @@ public class SeatEntity {
                 .seatNo(seat.getSeatNo())
                 .concertHall(seat.getConcertHall())
                 .showTime(seat.getShowTime())
-                .price(seat.getPrice())
                 .status(seat.getStatus())
                 .build();
     }
@@ -69,7 +63,6 @@ public class SeatEntity {
                 .concertName(seat.getConcertName())
                 .concertHall(seat.getConcertHall())
                 .showTime(seat.getShowTime())
-                .price(seat.getPrice())
                 .status(seat.getStatus())
                 .build();
     }

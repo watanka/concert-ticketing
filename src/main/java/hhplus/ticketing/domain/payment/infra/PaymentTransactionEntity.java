@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name="payment")
 @Getter
 @Builder
 @NoArgsConstructor

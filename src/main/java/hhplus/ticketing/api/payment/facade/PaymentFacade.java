@@ -32,7 +32,7 @@ public class PaymentFacade {
 
             userService.updateBalance(user, payPoint);
 
-            pointService.recordPointTransaction(user.getUserId(), payPoint, now);
+            pointService.recordPointTransaction(user.getId(), payPoint, now);
             ticketService.confirmPayment(ticket);
 
             PaymentTransaction paymentTransaction = paymentService.recordPaymentTransaction(ticket, user);

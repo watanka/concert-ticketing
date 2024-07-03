@@ -43,7 +43,7 @@ public class PointTransactionTest {
         user.updatePoint(point);
         userService.save(user);
 
-        User userFound = userService.findById(user.getUserId());
+        User userFound = userService.findById(user.getId());
         Assertions.assertThat(userFound.getBalance()).isEqualTo(pointAmount);
 
     }
@@ -61,7 +61,7 @@ public class PointTransactionTest {
         userService.save(user);
 
         //then
-        User userFound = userService.findById(user.getUserId());
+        User userFound = userService.findById(user.getId());
         Assertions.assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePoint.getAmount());
     }
 
@@ -93,8 +93,8 @@ public class PointTransactionTest {
 
         LocalDateTime now = LocalDateTime.now();
 
-        pointService.recordPointTransaction(user.getUserId(), rechargePoint, now);
-        pointService.recordPointTransaction(user.getUserId(), usePoint, now);
+        pointService.recordPointTransaction(user.getId(), rechargePoint, now);
+        pointService.recordPointTransaction(user.getId(), usePoint, now);
 
         Assertions.assertThat(pointService.queryTransactions(userId))
                 .isEqualTo(

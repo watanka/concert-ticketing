@@ -72,9 +72,6 @@ public class ConcertControllerTest {
                 .andExpect(jsonPath("$.seatList[0].seatNo")
                         .value("1"))
                 .andExpect(jsonPath("$.seatList[0].status")
-                        .value("AVAILABLE"))
-                .andExpect(jsonPath("$.seatList[0].price")
-                        .value("300000"))
-        ;
+                        .value("AVAILABLE"));
     }
 }

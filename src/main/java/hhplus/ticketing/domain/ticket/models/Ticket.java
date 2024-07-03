@@ -3,49 +3,58 @@ package hhplus.ticketing.domain.ticket.models;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
-import hhplus.ticketing.domain.user.models.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class Ticket {
     long id;
     Seat seat;
-    User user;
+    long userId;
     long price;
     TicketStatus status;
     LocalDateTime reservedTime;
 
-
-    public Ticket( Seat seat, User user) {
+    @Builder
+    public Ticket(Seat seat, long price, long userId) {
+        this.userId = userId;
+        this.price = price;
         this.seat = seat;
-        this.seat.updateStatus(SeatStatus.RESERVED);
-        this.price = this.seat.getPrice();
-
-        this.user = user;
-        this.reservedTime = LocalDateTime.now();
         this.status = TicketStatus.PENDING;
+        this.reservedTime = LocalDateTime.now();
     }
 
-    public LocalDateTime getDateInfo(){
-        return seat.getShowTime();
-    }
-
-    public long getUserId(){
-        return user.getUserId();
-    }
-
-    public long getSeatNo(){
-        return seat.getSeatNo();
-    }
-
-    public ConcertHall getConcertHall(){
-        return seat.getConcertHall();
+    public Ticket(Seat seat, long price, long userId, LocalDateTime reservedTime) {
+        this.userId = userId;
+        this.price = price;
+        this.seat = seat;
+        seat.updateStatus(SeatStatus.RESERVED);
+        this.status = TicketStatus.PENDING;
+        this.reservedTime = reservedTime;
     }
 
     public void updateStatus(TicketStatus status){
         this.status = status;
     }
 
+    public long getConcertId(){
+        return this.seat.getConcertId();
+    }
+
+    public LocalDateTime getShowTime() {
+        return this.seat.getShowTime();
+    }
+
+    public long getSeatNo() {
+        return seat.getSeatNo();
+    }
+
+    public ConcertHall getConcertHall() {
+        return seat.getConcertHall();
+    }
 }

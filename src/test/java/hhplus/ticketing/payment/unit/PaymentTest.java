@@ -42,13 +42,12 @@ public class PaymentTest {
     PaymentService paymentService = new PaymentService(memoryPaymentTransactionRepository);
     PaymentFacade paymentFacade = new PaymentFacade(userService, ticketService, pointService, paymentService);
 
-    private Seat setSeat(long price) {
+    private Seat setSeat() {
         return  Seat.builder()
                 .seatNo(1)
                 .concertName("아이유 10주년 콘서트")
                 .concertHall(ConcertHall.JAMSIL)
                 .showTime(LocalDateTime.now())
-                .price(100000)
                 .status(SeatStatus.RESERVED)
                 .build();
 
@@ -64,8 +63,8 @@ public class PaymentTest {
     @DisplayName("사용자가 보유한 잔액이 부족하면 결제를 실패한다.")
     void fail_payment_when_point_is_not_enough(){
         User user = setUser(0);
-        Seat seat = setSeat(100000);
-        Ticket ticket = new Ticket(seat, user);
+        Seat seat = setSeat();
+        Ticket ticket = new Ticket(seat,100000, user.getId());
 
 
 
@@ -77,8 +76,8 @@ public class PaymentTest {
     @DisplayName("결제완료시 사용자 잔액이 차감된다.")
     void deduct_point_when_payment_complete(){
         User user = setUser(200000);
-        Seat seat = setSeat(100000);
-        Ticket ticket = new Ticket(seat, user);
+        Seat seat = setSeat();
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
@@ -90,8 +89,8 @@ public class PaymentTest {
     @DisplayName("결제완료시 티켓 상태가 '예약'으로 변경된다.")
     void ticket_status_reserved_when_payment_complete(){
         User user = setUser(200000);
-        Seat seat = setSeat(100000);
-        Ticket ticket = new Ticket(seat, user);
+        Seat seat = setSeat();
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
@@ -102,16 +101,16 @@ public class PaymentTest {
     @DisplayName("결제완료시 결제내역이 남는다.")
     void payment_left_payment_transaction(){
         User user = setUser(200000);
-        Seat seat = setSeat(100000);
-        Ticket ticket = new Ticket(seat, user);
+        Seat seat = setSeat();
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
-        List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getUserId());
+        List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getId());
 
         PaymentTransaction transaction = transactions.get(0);
 
-        Assertions.assertThat(transaction.userId()).isEqualTo(user.getUserId());
+        Assertions.assertThat(transaction.userId()).isEqualTo(user.getId());
         Assertions.assertThat(transaction.price()).isEqualTo(ticket.getPrice());
         Assertions.assertThat(transaction.ticketId()).isEqualTo(ticket.getId());
     }

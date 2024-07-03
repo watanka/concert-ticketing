@@ -55,11 +55,11 @@ class PointTransactionJPAIntegrationTest {
         Point rechargePoint = new Point(pointAmount, PointType.RECHARGE);
         User user = setUser(1, 0);
         userService.save(user);
-        pointService.recordPointTransaction(user.getUserId(), rechargePoint, LocalDateTime.now());
+        pointService.recordPointTransaction(user.getId(), rechargePoint, LocalDateTime.now());
         userService.updateBalance(user, rechargePoint);
 
 
-        User userFound = userService.findById(user.getUserId());
+        User userFound = userService.findById(user.getId());
 
 
         assertThat(userFound.getBalance()).isEqualTo(pointAmount);
@@ -77,11 +77,11 @@ class PointTransactionJPAIntegrationTest {
         User user = setUser(1, pointAmount);
         userService.save(user);
         //when
-        pointService.recordPointTransaction(user.getUserId(), usePoint, LocalDateTime.now());
+        pointService.recordPointTransaction(user.getId(), usePoint, LocalDateTime.now());
         userService.updateBalance(user, usePoint);
         userService.save(user);
         //then
-        User userFound = userService.findById(user.getUserId());
+        User userFound = userService.findById(user.getId());
         assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePointAmount);
     }
 
@@ -114,8 +114,8 @@ class PointTransactionJPAIntegrationTest {
         Point rechargePoint = new Point(rechargePointAmount, PointType.RECHARGE);
         Point usePoint = new Point(usePointAmount, PointType.USE);
 
-        pointService.recordPointTransaction(user.getUserId(), rechargePoint, LocalDateTime.now());
-        pointService.recordPointTransaction(user.getUserId(), usePoint, LocalDateTime.now());
+        pointService.recordPointTransaction(user.getId(), rechargePoint, LocalDateTime.now());
+        pointService.recordPointTransaction(user.getId(), usePoint, LocalDateTime.now());
         userService.save(user);
 
         List<PointTransaction> pointTransactionList = pointService.queryTransactions(userId);

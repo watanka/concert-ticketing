@@ -1,5 +1,7 @@
 package hhplus.ticketing.domain.ticket.infra;
 
+import hhplus.ticketing.domain.ticket.models.Ticket;
+import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +24,6 @@ public interface TicketJPARepository extends JpaRepository<TicketEntity, Long> {
     boolean existsByConcertIdAndShowTimeAndSeatNo(@Param("concertId") long concertId,
                                                   @Param("showTime") LocalDateTime showTime,
                                                   @Param("seatNo") long seatNo);
+
+    List<TicketEntity> findAllByStatus(TicketStatus status);
 }

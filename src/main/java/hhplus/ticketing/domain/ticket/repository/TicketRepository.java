@@ -16,4 +16,6 @@ public interface TicketRepository {
 
     Ticket findById(long ticketId);
     Ticket save(Ticket ticket);
+
+    List<Ticket> findAllPendingTicket();
 }

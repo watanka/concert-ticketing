@@ -49,7 +49,7 @@ public class TicketTest {
     @BeforeEach
     void setUp(){
         ticketRepository = new MemoryTicketRepository();
-        ticketMonitor = new TicketMonitor();
+        ticketMonitor = new TicketMonitor(ticketRepository);
         ticketService = new TicketService(ticketRepository);
 
         user = new User(1, 0);
@@ -59,27 +59,27 @@ public class TicketTest {
     @Test
     @DisplayName("좌석이 이미 예약되었을 경우, 예약할 수 없다.")
     void cannot_reserve_if_seat_is_already_taken(){
-        ticketService.register(user.getUserId(), 100000, seat);
+        ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
         assertThrows(UnavailableSeatException.class, () ->
-                ticketService.register(user.getUserId(),100000, seat));
+                ticketService.register(user.getId(),100000, seat, LocalDateTime.now()));
     }
 
     @Test
     @DisplayName("티켓을 유저 ID로 조회한다.")
     void query_ticket_by_user_id(){
-        ticketService.register(user.getUserId(), 100000, seat);
+        ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
-        Ticket ticket = ticketService.findByUserId(user.getUserId());
+        Ticket ticket = ticketService.findByUserId(user.getId());
 
-        assertThat(ticket.getUserId()).isEqualTo(user.getUserId());
+        assertThat(ticket.getUserId()).isEqualTo(user.getId());
         assertThat(ticket.getSeatNo()).isEqualTo(seat.getSeatNo());
     }
 
     @Test
     @DisplayName("티켓은 좌석정보와 날짜를 포함한다.")
     void ticket_includes_seat_info_and_date(){
-        Ticket ticket = ticketService.register(user.getUserId(), 100000, seat);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
         assertThat(ticket.getShowTime()).isEqualTo(ticketDate);
         assertThat(ticket.getSeatNo()).isEqualTo(seatNo);
@@ -91,7 +91,7 @@ public class TicketTest {
     @DisplayName("결제 직후, 티켓 상태는 예약대기.")
     void ticket_status_is_pending_before_payment(){
         //given 티켓이 발행되었는데
-        Ticket ticket = ticketService.register(user.getUserId(),100000, seat);
+        Ticket ticket = ticketService.register(user.getId(),100000, seat, LocalDateTime.now());
 
         assertThat(ticket.getStatus()).isEqualTo(TicketStatus.PENDING);
     }
@@ -100,10 +100,10 @@ public class TicketTest {
     @DisplayName("예약시점에서 5분이상 지나면 예약취소")
     void ticket_cancelled_if_not_paid_in_5_mins(){
 
-        Ticket ticket = ticketService.register(user.getUserId(), 100000, seat);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
         //when: 5분이 지났을 경우
-        ticketMonitor.checkPendingTicket(ticket, ticket.getReservedTime().plusMinutes(6));
+        ticketMonitor.cancelPendingTickets(ticket, ticket.getReservedTime().plusMinutes(6));
         //then: ticket 상태는 취소
         assertThat(ticket.getStatus()).isEqualTo(TicketStatus.CANCELLED);
     }

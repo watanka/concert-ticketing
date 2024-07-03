@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,7 +24,7 @@ public class TicketService {
                 .existsByConcertIdAndShowTimeAndSeatNo(seat.getConcertId(), seat.getShowTime(), seat.getSeatNo());
     }
 
-    public Ticket register(long userId, long price, Seat seat) {
+    public Ticket register(long userId, long price, Seat seat, LocalDateTime reservedTime) {
         if (isReserved(seat)){
             throw new UnavailableSeatException();
         }

@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@Entity(name="user")
+@Entity(name="`user`")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,14 +25,14 @@ public class UserEntity {
     public static UserEntity from(User user) {
 
         return UserEntity.builder()
-                .id(user.getUserId())
+                .id(user.getId())
                 .balance(user.getBalance())
                 .build();
     }
 
     public static User to(UserEntity userEntity) {
         return User.builder()
-                .userId(userEntity.getId())
+                .id(userEntity.getId())
                 .balance(userEntity.getBalance())
                 .build();
     }

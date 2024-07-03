@@ -6,14 +6,15 @@ import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.payment.components.PaymentService;
 import hhplus.ticketing.domain.payment.models.PaymentTransaction;
-import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.ticket.components.TicketService;
+import hhplus.ticketing.domain.ticket.infra.TicketJPARepository;
 import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.user.components.UserService;
 import hhplus.ticketing.domain.user.models.User;
 import hhplus.ticketing.api.payment.facade.PaymentFacade;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class PaymentJPAIntegrationTest {
     UserService userService;
 
     @Autowired
-    PointService pointService;
+    TicketJPARepository ticketRepository;
 
     @Autowired
     TicketService ticketService;
@@ -54,6 +55,11 @@ public class PaymentJPAIntegrationTest {
 
     }
 
+    @BeforeEach
+    void setUp(){
+        ticketRepository.deleteAll();
+    }
+
     private User setUser(long balance){
         User user = new User(1, balance);
 
@@ -65,7 +71,7 @@ public class PaymentJPAIntegrationTest {
     void fail_payment_when_point_is_not_enough(){
         User user = setUser(0);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getUserId());
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
 
 
@@ -78,10 +84,10 @@ public class PaymentJPAIntegrationTest {
     void deduct_point_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getUserId());
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
-        User foundUser = userService.findById(user.getUserId());
+        User foundUser = userService.findById(user.getId());
         assertThat(foundUser.getBalance()).isEqualTo(100000);
     }
 
@@ -90,11 +96,11 @@ public class PaymentJPAIntegrationTest {
     void ticket_status_reserved_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat,100000, user.getUserId());
+        Ticket ticket = new Ticket(seat,100000, user.getId());
 
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
-        Ticket foundTicket = ticketService.findByUserId(user.getUserId());
+        Ticket foundTicket = ticketService.findByUserId(user.getId());
 
         assertThat(foundTicket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
     }
@@ -104,14 +110,14 @@ public class PaymentJPAIntegrationTest {
     void payment_left_payment_transaction(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getUserId());
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
-        List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getUserId());
+        List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getId());
 
         PaymentTransaction transaction = transactions.get(0);
 
-        Assertions.assertThat(transaction.userId()).isEqualTo(user.getUserId());
+        Assertions.assertThat(transaction.userId()).isEqualTo(user.getId());
         Assertions.assertThat(transaction.price()).isEqualTo(ticket.getPrice());
         Assertions.assertThat(transaction.ticketId()).isEqualTo(ticket.getId());
     }

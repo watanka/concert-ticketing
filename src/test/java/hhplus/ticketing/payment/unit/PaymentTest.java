@@ -64,7 +64,7 @@ public class PaymentTest {
     void fail_payment_when_point_is_not_enough(){
         User user = setUser(0);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat,100000, user.getUserId());
+        Ticket ticket = new Ticket(seat,100000, user.getId());
 
 
 
@@ -77,7 +77,7 @@ public class PaymentTest {
     void deduct_point_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getUserId());
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
@@ -90,7 +90,7 @@ public class PaymentTest {
     void ticket_status_reserved_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getUserId());
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
@@ -102,15 +102,15 @@ public class PaymentTest {
     void payment_left_payment_transaction(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getUserId());
+        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
 
-        List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getUserId());
+        List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getId());
 
         PaymentTransaction transaction = transactions.get(0);
 
-        Assertions.assertThat(transaction.userId()).isEqualTo(user.getUserId());
+        Assertions.assertThat(transaction.userId()).isEqualTo(user.getId());
         Assertions.assertThat(transaction.price()).isEqualTo(ticket.getPrice());
         Assertions.assertThat(transaction.ticketId()).isEqualTo(ticket.getId());
     }

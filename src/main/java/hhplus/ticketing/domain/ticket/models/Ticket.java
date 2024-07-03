@@ -28,6 +28,14 @@ public class Ticket {
         this.reservedTime = LocalDateTime.now();
     }
 
+    public Ticket(Seat seat, long price, long userId, LocalDateTime reservedTime) {
+        this.userId = userId;
+        this.price = price;
+        this.seat = seat;
+        this.status = TicketStatus.PENDING;
+        this.reservedTime = reservedTime;
+    }
+
     public void updateStatus(TicketStatus status){
         this.status = status;
     }

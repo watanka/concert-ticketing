@@ -1,6 +1,7 @@
 package hhplus.ticketing.domain.ticket.infra;
 
 import hhplus.ticketing.domain.ticket.models.Ticket;
+import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.ticket.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,5 +48,13 @@ public class TicketRepositoryImpl implements TicketRepository {
         TicketEntity ticketEntity = ticketJPARepository.save(TicketEntity.from(ticket));
 
         return TicketEntity.to(ticketEntity);
+    }
+
+    @Override
+    public List<Ticket> findAllPendingTicket(){
+        List<TicketEntity> ticketEntityList = ticketJPARepository.findAllByStatus(TicketStatus.PENDING);
+
+        return ticketEntityList.stream()
+                .map(TicketEntity::to).toList();
     }
 }

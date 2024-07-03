@@ -11,7 +11,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class User {
-    long userId;
+    long id;
     long balance;
 
     public void updatePoint(Point point) {
@@ -32,8 +32,8 @@ public class User {
     }
 
 
-    public long getUserId() {
-        return userId;
+    public long getId() {
+        return id;
     }
 
     public long getBalance() {

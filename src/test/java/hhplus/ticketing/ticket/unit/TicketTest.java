@@ -38,6 +38,7 @@ public class TicketTest {
     private Seat setSeat(SeatStatus status){
         return  Seat.builder()
                 .seatNo(seatNo)
+                .concertId(1)
                 .concertName(concertName)
                 .concertHall(concertHall)
                 .showTime(ticketDate)
@@ -58,9 +59,10 @@ public class TicketTest {
     @Test
     @DisplayName("좌석이 이미 예약되었을 경우, 예약할 수 없다.")
     void cannot_reserve_if_seat_is_already_taken(){
-        seat.updateStatus(SeatStatus.RESERVED);
+        ticketService.register(user.getUserId(), 100000, seat);
 
-        assertThrows(UnavailableSeatException.class, () -> ticketService.register(user.getUserId(),100000, seat));
+        assertThrows(UnavailableSeatException.class, () ->
+                ticketService.register(user.getUserId(),100000, seat));
     }
 
     @Test

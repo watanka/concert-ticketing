@@ -12,6 +12,8 @@ public interface TicketRepository {
 
     List<Ticket> findByConcertIdAndShowTime(long concertId, LocalDateTime showTime);
 
+    boolean existsByConcertIdAndShowTimeAndSeatNo(long concertId, LocalDateTime showTime, long seatNo);
+
     Ticket findById(long ticketId);
     Ticket save(Ticket ticket);
 }

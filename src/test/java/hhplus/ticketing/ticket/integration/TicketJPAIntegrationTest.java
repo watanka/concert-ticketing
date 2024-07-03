@@ -44,6 +44,7 @@ public class TicketJPAIntegrationTest {
     private Seat setSeat(SeatStatus status){
         return  Seat.builder()
                 .seatNo(seatNo)
+                .concertId(1)
                 .concertName(concertName)
                 .concertHall(concertHall)
                 .showTime(ticketDate)

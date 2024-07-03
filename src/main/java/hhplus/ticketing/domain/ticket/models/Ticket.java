@@ -32,6 +32,9 @@ public class Ticket {
         this.status = status;
     }
 
+    public long getConcertId(){
+        return this.seat.getConcertId();
+    }
 
     public LocalDateTime getShowTime() {
         return this.seat.getShowTime();

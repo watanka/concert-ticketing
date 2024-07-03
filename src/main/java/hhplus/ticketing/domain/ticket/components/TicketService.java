@@ -19,9 +19,8 @@ public class TicketService {
     private final TicketRepository ticketRepository;
 
     public boolean isReserved(Seat seat){
-        List<Ticket> ticketList = ticketRepository.findByConcertIdAndShowTime(seat.getConcertId(), seat.getShowTime());
-        return ticketList.stream()
-                .anyMatch(ticket -> ticket.getSeatNo() == seat.getSeatNo());
+        return ticketRepository
+                .existsByConcertIdAndShowTimeAndSeatNo(seat.getConcertId(), seat.getShowTime(), seat.getSeatNo());
     }
 
     public Ticket register(long userId, long price, Seat seat) {

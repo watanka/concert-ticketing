@@ -23,11 +23,16 @@ public class TicketRepositoryImpl implements TicketRepository {
 
     @Override
     public List<Ticket> findByConcertIdAndShowTime(long concertId, LocalDateTime showTime){
-        List<TicketEntity> ticketEntityList = ticketJPARepository.findByConcertIdAndShowTime(concertId, showTime);
+        List<TicketEntity> ticketEntityList = ticketJPARepository.findAllByConcertIdAndShowTime(concertId, showTime);
 
         return ticketEntityList.stream()
                 .map(TicketEntity::to)
                 .toList();
+    }
+
+    @Override
+    public boolean existsByConcertIdAndShowTimeAndSeatNo(long concertId, LocalDateTime showTime, long seatNo){
+        return ticketJPARepository.existsByConcertIdAndShowTimeAndSeatNo(concertId, showTime, seatNo);
     }
 
     @Override

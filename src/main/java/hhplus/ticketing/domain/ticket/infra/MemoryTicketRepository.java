@@ -27,6 +27,13 @@ public class MemoryTicketRepository implements TicketRepository {
     }
 
     @Override
+    public boolean existsByConcertIdAndShowTimeAndSeatNo(long concertId, LocalDateTime showTime, long seatNo) {
+        List<Ticket> ticketList = ticketsByConcertIdAndShowTimeMap.get(createShowTimeKey(concertId, showTime));
+        System.out.println(ticketsByConcertIdAndShowTimeMap);
+        return ticketList.stream().anyMatch(ticket -> ticket.getSeatNo() == seatNo);
+    }
+
+    @Override
     public Ticket findById(long ticketId) {
         return ticketByIdMap.get(ticketId);
     }
@@ -35,8 +42,7 @@ public class MemoryTicketRepository implements TicketRepository {
     public Ticket save(Ticket ticket) {
         ticketByUserIdMap.put(ticket.getUserId(), ticket);
         ticketByIdMap.put(ticket.getId(), ticket);
-        List<Ticket> ticketList = ticketsByConcertIdAndShowTimeMap.get(createShowTimeKey(ticket.getId(), ticket.getShowTime()));
-        ticketList.add(ticket);
+        ticketsByConcertIdAndShowTimeMap.get(createShowTimeKey(ticket.getConcertId(), ticket.getShowTime())).add(ticket);
         return ticket;
     }
 

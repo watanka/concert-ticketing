@@ -15,6 +15,12 @@ public class Token {
     TokenStatus status;
     LocalDateTime issuedAt;
 
+    public Token(long concertId, String claim, LocalDateTime issuedAt){
+        this.concertId = concertId;
+        this.claim = claim;
+        this.issuedAt = issuedAt;
+    }
+
     public void updateStatus(TokenStatus status){
         this.status = status;
     }

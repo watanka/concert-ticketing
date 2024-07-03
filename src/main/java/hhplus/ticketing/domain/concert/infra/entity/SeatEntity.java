@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Entity(name="seat")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Entity
 @Builder
 @IdClass(SeatEntityId.class)
 public class SeatEntity {

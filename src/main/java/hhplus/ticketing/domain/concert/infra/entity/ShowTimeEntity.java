@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Entity(name="showtime")
 @NoArgsConstructor
 @Getter
-@Table(name="showtime")
-@Entity
 @IdClass(ShowTimeEntityId.class)
 public class ShowTimeEntity {
 

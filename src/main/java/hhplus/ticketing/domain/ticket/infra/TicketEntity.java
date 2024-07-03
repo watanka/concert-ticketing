@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name="ticket")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -67,7 +67,7 @@ public class TicketEntity {
     public static TicketEntity from(Ticket ticket){
         return TicketEntity.builder()
                 .id(ticket.getId())
-                .concertId(ticket.getUserId())
+                .concertId(ticket.getConcertId())
                 .concertHall(ticket.getConcertHall())
                 .showTime(ticket.getShowTime())
                 .price(ticket.getPrice())

@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 @Repository
 public class MemoryTokenGenerator implements TokenGenerator {
     public Token issue(long concertId, long userId, LocalDateTime issuedAt) {
-        return new Token(concertId, String.valueOf(userId), userId, TokenStatus.WAITING, issuedAt);
+        return new Token(concertId, String.valueOf(userId), userId, issuedAt);
     }
 }

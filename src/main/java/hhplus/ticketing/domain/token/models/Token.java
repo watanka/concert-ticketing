@@ -12,7 +12,6 @@ public class Token {
     long concertId;
     String claim;
     long userId;
-    TokenStatus status;
     LocalDateTime issuedAt;
 
     public Token(long concertId, String claim, LocalDateTime issuedAt){
@@ -21,9 +20,6 @@ public class Token {
         this.issuedAt = issuedAt;
     }
 
-    public void updateStatus(TokenStatus status){
-        this.status = status;
-    }
     public long getTimeScale(){
         return issuedAt.toInstant(ZoneOffset.UTC).toEpochMilli();
     }

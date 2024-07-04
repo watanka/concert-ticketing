@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class WaitingQueueService {
@@ -27,9 +29,9 @@ public class WaitingQueueService {
 
     }
 
-    public Token register(long concertId, long userId) {
+    public Token register(long concertId, long userId, LocalDateTime issuedAt) {
 
-        Token token = tokenGenerator.issue(concertId, userId);
+        Token token = tokenGenerator.issue(concertId, userId, issuedAt);
         queueManager.insertInWaitingQueue(token);
         return token;
     }

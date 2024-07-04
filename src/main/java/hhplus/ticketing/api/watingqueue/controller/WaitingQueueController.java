@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @Tag(name="대기열", description="콘서트 예약 입장전 대기열")
 @RestController
 public class WaitingQueueController {
@@ -30,6 +32,6 @@ public class WaitingQueueController {
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = WaitingInfoResponse.class)))
     public WaitingInfoResponse queryWaitingNum(@RequestHeader(name="Authorization") String token){
 
-        return WaitingInfoResponse.from(new WaitingInfo(1, 10));
+        return WaitingInfoResponse.from(new WaitingInfo(1, 10, LocalDateTime.now()));
     }
 }

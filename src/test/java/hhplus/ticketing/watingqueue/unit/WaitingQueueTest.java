@@ -39,7 +39,7 @@ public class WaitingQueueTest {
     void receive_token_when_register_in_waiting_queue_with_userID(){
         long userId = 1;
 
-        Token token = waitingQueueService.register(1, userId);
+        Token token = waitingQueueService.register(1, userId, LocalDateTime.now());
         WaitingInfo waitingInfo = waitingQueueService.query(token);
 
         assertThat(waitingInfo.userId()).isEqualTo(userId);
@@ -51,8 +51,8 @@ public class WaitingQueueTest {
         long userId1 = 100;
         long userId2 = 200;
 
-        Token token1 = waitingQueueService.register(1, userId1);
-        Token trgToken = waitingQueueService.register(1, userId2);
+        Token token1 = waitingQueueService.register(1, userId1, LocalDateTime.now());
+        Token trgToken = waitingQueueService.register(1, userId2, LocalDateTime.now());
 
         WaitingInfo info = waitingQueueService.query(trgToken);
 
@@ -60,38 +60,32 @@ public class WaitingQueueTest {
     }
 
     @Test
-    @DisplayName("입장 순서가 되면 토큰을 활성화시킨다.")
+    @DisplayName("입장 순서가 되면 토큰을 활성화시킨다. 활성화 여부는 토큰의 활성토큰리스트 포함 여부이다.")
     void activate_token_when_waiting_is_over(){
-        QueueManager queueManager = new MemoryQueueManager();
-
         long userId = 1;
-        Token token = waitingQueueService.register(1, userId);
+        Token token = waitingQueueService.register(1, userId, LocalDateTime.now());
 
         assertThat(token.getStatus()).isEqualTo(TokenStatus.WAITING);
 
         queueManager.activate(token);
 
-        assertThat(token.getStatus()).isEqualTo(TokenStatus.ACTIVE);
+        assertThat(queueManager.checkActive(token)).isTrue();
     }
 
     @Test
     @DisplayName("토큰 유효시간이 지나면 만료시킨다.")
     void deactivate_token_when_time_up(){
-        QueueManager queueManager = new MemoryQueueManager();
 
-        LocalDateTime timeAlreadyExpired = LocalDateTime.now().minusMinutes(10);
+        long concertId = 1L;
+        long userId = 1L;
 
+        LocalDateTime issuedAt = LocalDateTime.now();
 
-        Token token = new Token(1, "", 1, TokenStatus.ACTIVE, timeAlreadyExpired);
-        token.updateStatus(TokenStatus.WAITING);
+        Token token = waitingQueueService.register(1, userId, LocalDateTime.now());
+        queueManager.activateTokensByTimeOrder(concertId, 1);
+        assertThat(queueManager.checkActive(token)).isTrue();
 
-
-        assertThat(queueManager.checkExpired(token)).isTrue();
-
-        queueManager.deactivate(token);
-
-        assertThat(token.getStatus()).isEqualTo(TokenStatus.EXPIRED);
-
-
+        queueManager.expireTokens(issuedAt.plusMinutes(10));
+        assertThat(queueManager.isExpired(token)).isTrue();
     }
 }

@@ -1,8 +1,8 @@
-package hhplus.ticketing.watingqueue.unit;
+package hhplus.ticketing.domain.token.infra.fake;
 
-import hhplus.ticketing.domain.watingqueue.infra.WaitingQueueManager;
-import hhplus.ticketing.domain.watingqueue.models.Token;
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
+import hhplus.ticketing.domain.token.repository.WaitingQueueManager;
+import hhplus.ticketing.domain.token.models.Token;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

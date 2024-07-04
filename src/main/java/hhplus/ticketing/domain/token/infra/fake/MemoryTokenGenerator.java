@@ -1,8 +1,8 @@
-package hhplus.ticketing.domain.watingqueue.infra;
+package hhplus.ticketing.domain.token.infra.fake;
 
-import hhplus.ticketing.domain.watingqueue.components.TokenGenerator;
-import hhplus.ticketing.domain.watingqueue.models.Token;
-import hhplus.ticketing.domain.watingqueue.models.TokenStatus;
+import hhplus.ticketing.domain.token.components.TokenGenerator;
+import hhplus.ticketing.domain.token.models.Token;
+import hhplus.ticketing.domain.token.models.TokenStatus;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

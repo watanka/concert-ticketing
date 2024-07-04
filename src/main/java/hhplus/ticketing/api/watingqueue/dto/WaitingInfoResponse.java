@@ -1,6 +1,6 @@
 package hhplus.ticketing.api.watingqueue.dto;
 
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

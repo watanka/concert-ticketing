@@ -1,4 +1,4 @@
-package hhplus.ticketing.domain.watingqueue.models;
+package hhplus.ticketing.domain.token.models;
 
 import java.time.LocalDateTime;
 

@@ -1,12 +1,9 @@
-package hhplus.ticketing.watingqueue.integration;
+package hhplus.ticketing.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.clients.jedis.ConnectionPoolConfig;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPooled;
 
 @Configuration

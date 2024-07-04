@@ -1,8 +1,9 @@
-package hhplus.ticketing.domain.watingqueue.infra;
+package hhplus.ticketing.domain.token.infra.jedis;
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
-import hhplus.ticketing.domain.watingqueue.models.Token;
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
+import hhplus.ticketing.domain.token.models.Token;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
+import hhplus.ticketing.domain.token.repository.WaitingQueueManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import redis.clients.jedis.JedisPooled;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
-public class JedisWaitingQueueManager implements WaitingQueueManager{
+public class JedisWaitingQueueManager implements WaitingQueueManager {
 
 
     private final JedisPooled jedis;
@@ -68,7 +69,7 @@ public class JedisWaitingQueueManager implements WaitingQueueManager{
 
     @Override
     public void clear() {
-        Set<String> keys = jedis.keys("*");
+        Set<String> keys = jedis.keys(WAITING_KEYNAME+"*");
 
         for (String key : keys) {
             // 각 키의 타입을 확인

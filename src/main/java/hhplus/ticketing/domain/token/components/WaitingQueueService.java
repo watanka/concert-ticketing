@@ -1,10 +1,10 @@
-package hhplus.ticketing.domain.watingqueue.components;
+package hhplus.ticketing.domain.token.components;
 
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
-import hhplus.ticketing.domain.watingqueue.models.Token;
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
-import hhplus.ticketing.domain.watingqueue.repository.TokenRepository;
+import hhplus.ticketing.domain.token.infra.QueueManager;
+import hhplus.ticketing.domain.token.models.Token;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

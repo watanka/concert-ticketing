@@ -3,7 +3,7 @@ package hhplus.ticketing.api.watingqueue.controller;
 import hhplus.ticketing.api.watingqueue.dto.TokenRequest;
 import hhplus.ticketing.api.watingqueue.dto.TokenResponse;
 import hhplus.ticketing.api.watingqueue.dto.WaitingInfoResponse;
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

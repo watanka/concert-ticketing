@@ -1,6 +1,6 @@
-package hhplus.ticketing.domain.watingqueue.components;
+package hhplus.ticketing.domain.token.components;
 
-import hhplus.ticketing.domain.watingqueue.models.Token;
+import hhplus.ticketing.domain.token.models.Token;
 
 import java.time.LocalDateTime;
 

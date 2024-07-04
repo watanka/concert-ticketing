@@ -1,11 +1,16 @@
 package hhplus.ticketing.watingqueue.unit;
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
-import hhplus.ticketing.domain.watingqueue.components.*;
-import hhplus.ticketing.domain.watingqueue.infra.*;
-import hhplus.ticketing.domain.watingqueue.models.Token;
-import hhplus.ticketing.domain.watingqueue.models.TokenStatus;
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
+import hhplus.ticketing.domain.token.components.*;
+import hhplus.ticketing.domain.token.infra.fake.MemoryActiveQueueManager;
+import hhplus.ticketing.domain.token.infra.fake.MemoryTokenGenerator;
+import hhplus.ticketing.domain.token.infra.fake.MemoryWaitingQueueManager;
+import hhplus.ticketing.domain.token.repository.ActiveTokenManager;
+import hhplus.ticketing.domain.token.infra.QueueManager;
+import hhplus.ticketing.domain.token.models.Token;
+import hhplus.ticketing.domain.token.models.TokenStatus;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
+import hhplus.ticketing.domain.token.repository.WaitingQueueManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,14 +20,15 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class WaitingQueueTest {
+public class TokenTest {
 
 
     TokenGenerator tokenGenerator = new MemoryTokenGenerator();
     WaitingQueueManager waitingQueueManager = new MemoryWaitingQueueManager();
-    ActiveQueueManager activeQueueManager = new MemoryActiveQueueManager();
+    ActiveTokenManager activeQueueManager = new MemoryActiveQueueManager();
 
-    QueueManager queueManager = new MemoryQueueManager(waitingQueueManager, activeQueueManager);
+
+    QueueManager queueManager = new QueueManager(waitingQueueManager, activeQueueManager);
     WaitingQueueService waitingQueueService = new WaitingQueueService(tokenGenerator, queueManager);
 
     @Test
@@ -68,7 +74,7 @@ public class WaitingQueueTest {
 
         assertThat(token.getStatus()).isEqualTo(TokenStatus.WAITING);
 
-        queueManager.activate(token, LocalDateTime.now());
+        queueManager.activateTokensByTimeOrder(token.getConcertId(), 1);
 
         assertThat(queueManager.checkActive(token)).isTrue();
     }
@@ -86,7 +92,7 @@ public class WaitingQueueTest {
         queueManager.activateTokensByTimeOrder(concertId, 1);
         assertThat(queueManager.checkActive(token)).isTrue();
 
-        queueManager.expireTokens(issuedAt.plusMinutes(10));
-        assertThat(queueManager.checkExpired(token, issuedAt.plusMinutes(10))).isTrue();
+        queueManager.expireTokensInActiveQueue(concertId, issuedAt.plusMinutes(10));
+        assertThat(queueManager.checkExpired(token)).isTrue();
     }
 }

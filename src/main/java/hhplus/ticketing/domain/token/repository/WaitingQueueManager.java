@@ -1,7 +1,7 @@
-package hhplus.ticketing.domain.watingqueue.infra;
+package hhplus.ticketing.domain.token.repository;
 
-import hhplus.ticketing.domain.watingqueue.models.Token;
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
+import hhplus.ticketing.domain.token.models.Token;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
 
 import java.util.List;
 

@@ -2,8 +2,7 @@ package hhplus.ticketing.watingqueue.unit;
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
 import hhplus.ticketing.domain.watingqueue.components.*;
-import hhplus.ticketing.domain.watingqueue.infra.MemoryTokenGenerator;
-import hhplus.ticketing.domain.watingqueue.infra.MemoryQueueManager;
+import hhplus.ticketing.domain.watingqueue.infra.*;
 import hhplus.ticketing.domain.watingqueue.models.Token;
 import hhplus.ticketing.domain.watingqueue.models.TokenStatus;
 import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
@@ -20,14 +19,16 @@ public class WaitingQueueTest {
 
 
     TokenGenerator tokenGenerator = new MemoryTokenGenerator();
-    QueueManager queueManager = new MemoryQueueManager();
+    WaitingQueueManager waitingQueueManager = new MemoryWaitingQueueManager();
+    ActiveQueueManager activeQueueManager = new MemoryActiveQueueManager();
+
+    QueueManager queueManager = new MemoryQueueManager(waitingQueueManager, activeQueueManager);
     WaitingQueueService waitingQueueService = new WaitingQueueService(tokenGenerator, queueManager);
 
     @Test
     @DisplayName("없는 토큰을 조회할 경우 예외 처리")
     void query_invalid_token(){
         Token invalidToken = new Token(1, "INVALID-TOKEN", 1, TokenStatus.WAITING, LocalDateTime.now());
-
 
         assertThrows(InvalidTokenException.class, () ->
                 waitingQueueService.query(invalidToken));
@@ -67,7 +68,7 @@ public class WaitingQueueTest {
 
         assertThat(token.getStatus()).isEqualTo(TokenStatus.WAITING);
 
-        queueManager.activate(token);
+        queueManager.activate(token, LocalDateTime.now());
 
         assertThat(queueManager.checkActive(token)).isTrue();
     }
@@ -86,6 +87,6 @@ public class WaitingQueueTest {
         assertThat(queueManager.checkActive(token)).isTrue();
 
         queueManager.expireTokens(issuedAt.plusMinutes(10));
-        assertThat(queueManager.isExpired(token)).isTrue();
+        assertThat(queueManager.checkExpired(token, issuedAt.plusMinutes(10))).isTrue();
     }
 }

@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface QueueManager {
 
+    boolean exists(String keyName, Token token);
+
     WaitingInfo getWaitingInfoByToken(Token token);
 
     WaitingInfo insertInWaitingQueue(Token token);
 
-    void deleteFromWaitingQueue(Token token);
-
-    void activate(Token token);
+    void activate(Token token, LocalDateTime dateTime);
     void deactivate(Token token);
     boolean checkExpired(Token token, LocalDateTime now);
 
@@ -29,6 +29,4 @@ public interface QueueManager {
     boolean checkActive(Token token);
 
     void expireTokens(LocalDateTime now);
-
-    boolean isExpired(Token token);
 }

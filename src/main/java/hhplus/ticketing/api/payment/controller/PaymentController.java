@@ -1,10 +1,8 @@
 package hhplus.ticketing.api.payment.controller;
 
-import hhplus.ticketing.api.concert.dto.ConcertListResponse;
 import hhplus.ticketing.api.payment.dto.PaymentHistoryResponse;
 import hhplus.ticketing.api.payment.dto.PaymentRequest;
 import hhplus.ticketing.api.payment.dto.PaymentTransactionResponse;
-import hhplus.ticketing.api.watingqueue.dto.TokenResponse;
 import hhplus.ticketing.domain.payment.models.PaymentTransaction;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

@@ -2,11 +2,10 @@ package hhplus.ticketing.watingqueue.integration;
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
 import hhplus.ticketing.domain.token.components.WaitingQueueService;
-import hhplus.ticketing.domain.token.infra.jedis.JedisActiveQueueManager;
-import hhplus.ticketing.domain.token.infra.jedis.JedisWaitingQueueManager;
-import hhplus.ticketing.domain.token.infra.QueueManager;
+import hhplus.ticketing.domain.token.infra.queue.jedis.JedisActiveQueueManager;
+import hhplus.ticketing.domain.token.infra.queue.jedis.JedisWaitingQueueManager;
+import hhplus.ticketing.domain.token.infra.queue.QueueManager;
 import hhplus.ticketing.domain.token.models.Token;
-import hhplus.ticketing.domain.token.models.TokenStatus;
 import hhplus.ticketing.domain.token.models.WaitingInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,13 +39,13 @@ public class TokenJedisTest {
     }
 
     Token createToken(long userId, long concertId, String tokenClaim, LocalDateTime registerTime){
-        return new Token(concertId, tokenClaim, userId, TokenStatus.WAITING, registerTime);
+        return new Token(concertId, tokenClaim, userId, registerTime);
     }
 
     @Test
     @DisplayName("없는 토큰을 조회할 경우 예외 처리")
     void query_invalid_token(){
-        Token invalidToken = new Token(1, "INVALID-TOKEN", 1, TokenStatus.WAITING, LocalDateTime.now());
+        Token invalidToken = new Token(1, "INVALID-TOKEN", 1, LocalDateTime.now());
 
 
         assertThrows(InvalidTokenException.class, () ->

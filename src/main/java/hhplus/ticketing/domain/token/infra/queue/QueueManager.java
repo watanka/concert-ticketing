@@ -1,5 +1,6 @@
-package hhplus.ticketing.domain.token.infra;
+package hhplus.ticketing.domain.token.infra.queue;
 
+import hhplus.ticketing.base.exceptions.InvalidTokenException;
 import hhplus.ticketing.domain.token.models.Token;
 import hhplus.ticketing.domain.token.models.WaitingInfo;
 import hhplus.ticketing.domain.token.repository.ActiveTokenManager;
@@ -14,16 +15,13 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class QueueManager {
-//    @Autowired
-//    private final JedisPooled jedis; // TODO: QueueManager가 Jedis에 의존하는 건 맘에 들지 않는다...
-
     @Autowired
     private final WaitingQueueManager waitingQueueManager;
     @Autowired
     private final ActiveTokenManager activeQueueManager;
 
 
-    public WaitingInfo getWaitingInfoByToken(Token token) {
+    public WaitingInfo getWaitingInfoByToken(Token token) throws InvalidTokenException {
         return waitingQueueManager.getWaitingInfoByToken(token);
     }
 

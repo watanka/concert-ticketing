@@ -1,22 +1,24 @@
 package hhplus.ticketing.domain.token.models;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @AllArgsConstructor
+@Builder
 @Getter
 public class Token {
 
     long concertId;
-    String claim;
+    String jwt;
     long userId;
     LocalDateTime issuedAt;
 
-    public Token(long concertId, String claim, LocalDateTime issuedAt){
+    public Token(long concertId, String jwt, LocalDateTime issuedAt) {
         this.concertId = concertId;
-        this.claim = claim;
+        this.jwt = jwt;
         this.issuedAt = issuedAt;
     }
 

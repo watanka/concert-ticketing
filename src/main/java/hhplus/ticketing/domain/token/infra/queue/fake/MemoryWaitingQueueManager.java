@@ -1,4 +1,4 @@
-package hhplus.ticketing.domain.token.infra.fake;
+package hhplus.ticketing.domain.token.infra.queue.fake;
 
 import hhplus.ticketing.domain.token.repository.WaitingQueueManager;
 import hhplus.ticketing.domain.token.models.Token;
@@ -14,19 +14,19 @@ public class MemoryWaitingQueueManager implements WaitingQueueManager {
 
     @Override
     public WaitingInfo getWaitingInfoByToken(Token token) {
-        return tokenMap.get(token.getClaim());
+        return tokenMap.get(token.getJwt());
     }
 
     @Override
     public WaitingInfo insertInWaitingQueue(Token token) {
         WaitingInfo waitingInfo = new WaitingInfo(token.getUserId(), tokenMap.size()+1, token.getIssuedAt());
-        tokenMap.put(token.getClaim(), waitingInfo);
+        tokenMap.put(token.getJwt(), waitingInfo);
         return waitingInfo;
     }
 
     @Override
     public void deleteFromWaitingQueue(Token token) {
-        tokenMap.remove(token.getClaim());
+        tokenMap.remove(token.getJwt());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MemoryWaitingQueueManager implements WaitingQueueManager {
 
     @Override
     public void remove(Token token) {
-        tokenMap.remove(token.getClaim());
+        tokenMap.remove(token.getJwt());
     }
 
     @Override

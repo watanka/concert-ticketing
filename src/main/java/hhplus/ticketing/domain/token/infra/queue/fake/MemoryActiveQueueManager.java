@@ -1,4 +1,4 @@
-package hhplus.ticketing.domain.token.infra.fake;
+package hhplus.ticketing.domain.token.infra.queue.fake;
 
 import hhplus.ticketing.domain.token.models.Token;
 import hhplus.ticketing.domain.token.repository.ActiveTokenManager;
@@ -15,18 +15,18 @@ public class MemoryActiveQueueManager implements ActiveTokenManager {
 
     @Override
     public void activate(Token token) {
-        activatedTokenMap.put(token.getClaim(), token.getIssuedAt());
+        activatedTokenMap.put(token.getJwt(), token.getIssuedAt());
     }
 
     @Override
     public void deactivate(Token token) {
-        activatedTokenMap.remove(token.getClaim());
+        activatedTokenMap.remove(token.getJwt());
     }
 
 
     @Override
     public boolean checkActive(Token token) {
-        return activatedTokenMap.containsKey(token.getClaim());
+        return activatedTokenMap.containsKey(token.getJwt());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MemoryActiveQueueManager implements ActiveTokenManager {
 
     @Override
     public boolean checkExpired(Token token) {
-        return !activatedTokenMap.containsKey(token.getClaim());
+        return !activatedTokenMap.containsKey(token.getJwt());
     }
 
     @Override

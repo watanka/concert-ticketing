@@ -1,5 +1,6 @@
 package hhplus.ticketing.domain.token.repository;
 
+import hhplus.ticketing.base.exceptions.InvalidTokenException;
 import hhplus.ticketing.domain.token.models.Token;
 import hhplus.ticketing.domain.token.models.WaitingInfo;
 

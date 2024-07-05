@@ -1,4 +1,4 @@
-package hhplus.ticketing.domain.token.infra.fake;
+package hhplus.ticketing.domain.token.infra.queue.fake;
 
 import hhplus.ticketing.domain.token.repository.WaitingQueueManager;
 import hhplus.ticketing.domain.token.models.Token;

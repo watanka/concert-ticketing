@@ -1,4 +1,4 @@
-package hhplus.ticketing.domain.token.infra.jedis;
+package hhplus.ticketing.domain.token.infra.queue.jedis;
 
 import hhplus.ticketing.domain.token.models.Token;
 import hhplus.ticketing.domain.token.repository.ActiveTokenManager;
@@ -22,13 +22,13 @@ public class JedisActiveQueueManager implements ActiveTokenManager {
     @Override
     public void activate(Token token) {
         String keyName = ACTIVATED_KEYNAME + token.getConcertId();
-        jedis.zadd(keyName, token.getTimeScale(), token.getClaim());
+        jedis.zadd(keyName, token.getTimeScale(), token.getJwt());
     }
 
     @Override
     public void deactivate(Token token) {
         String keyName = ACTIVATED_KEYNAME + token.getConcertId();
-        jedis.zrem(keyName, token.getClaim());
+        jedis.zrem(keyName, token.getJwt());
     }
 
 
@@ -38,7 +38,7 @@ public class JedisActiveQueueManager implements ActiveTokenManager {
 
     @Override
     public boolean checkActive(Token token) {
-        return jedis.zscore(ACTIVATED_KEYNAME + token.getConcertId(), token.getClaim()) != null;
+        return jedis.zscore(ACTIVATED_KEYNAME + token.getConcertId(), token.getJwt()) != null;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class JedisActiveQueueManager implements ActiveTokenManager {
 
     @Override
     public boolean checkExpired(Token token) {
-        return jedis.zscore(ACTIVATED_KEYNAME + token.getConcertId(), token.getClaim()) == null;
+        return jedis.zscore(ACTIVATED_KEYNAME + token.getConcertId(), token.getJwt()) == null;
     }
 
     @Override

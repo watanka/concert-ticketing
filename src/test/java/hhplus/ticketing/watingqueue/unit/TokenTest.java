@@ -2,14 +2,14 @@ package hhplus.ticketing.watingqueue.unit;
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
 import hhplus.ticketing.domain.token.components.*;
-import hhplus.ticketing.domain.token.infra.fake.MemoryActiveQueueManager;
-import hhplus.ticketing.domain.token.infra.fake.MemoryTokenGenerator;
-import hhplus.ticketing.domain.token.infra.fake.MemoryWaitingQueueManager;
+import hhplus.ticketing.domain.token.infra.queue.fake.MemoryActiveQueueManager;
+import hhplus.ticketing.domain.token.infra.token.JwtTokenManager;
+import hhplus.ticketing.domain.token.infra.queue.fake.MemoryWaitingQueueManager;
 import hhplus.ticketing.domain.token.repository.ActiveTokenManager;
-import hhplus.ticketing.domain.token.infra.QueueManager;
+import hhplus.ticketing.domain.token.infra.queue.QueueManager;
 import hhplus.ticketing.domain.token.models.Token;
-import hhplus.ticketing.domain.token.models.TokenStatus;
 import hhplus.ticketing.domain.token.models.WaitingInfo;
+import hhplus.ticketing.domain.token.repository.TokenManager;
 import hhplus.ticketing.domain.token.repository.WaitingQueueManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,19 +23,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TokenTest {
 
 
-    TokenGenerator tokenGenerator = new MemoryTokenGenerator();
+    TokenManager tokenManager = new JwtTokenManager();
     WaitingQueueManager waitingQueueManager = new MemoryWaitingQueueManager();
     ActiveTokenManager activeQueueManager = new MemoryActiveQueueManager();
 
 
     QueueManager queueManager = new QueueManager(waitingQueueManager, activeQueueManager);
-    WaitingQueueService waitingQueueService = new WaitingQueueService(tokenGenerator, queueManager);
+    WaitingQueueService waitingQueueService = new WaitingQueueService(tokenManager, queueManager);
 
     @Test
     @DisplayName("없는 토큰을 조회할 경우 예외 처리")
     void query_invalid_token(){
-        Token invalidToken = new Token(1, "INVALID-TOKEN", 1, TokenStatus.WAITING, LocalDateTime.now());
-
+        Token invalidToken = new Token(1, "INVALID-TOKEN", 1, LocalDateTime.now());
         assertThrows(InvalidTokenException.class, () ->
                 waitingQueueService.query(invalidToken));
 
@@ -72,7 +71,7 @@ public class TokenTest {
         long userId = 1;
         Token token = waitingQueueService.register(1, userId, LocalDateTime.now());
 
-        assertThat(token.getStatus()).isEqualTo(TokenStatus.WAITING);
+        assertThat(queueManager.getWaitingInfoByToken(token).waitingNo()).isNotNull();
 
         queueManager.activateTokensByTimeOrder(token.getConcertId(), 1);
 

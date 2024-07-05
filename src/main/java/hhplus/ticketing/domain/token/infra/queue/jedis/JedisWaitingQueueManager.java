@@ -1,4 +1,4 @@
-package hhplus.ticketing.domain.token.infra.jedis;
+package hhplus.ticketing.domain.token.infra.queue.jedis;
 
 import hhplus.ticketing.base.exceptions.InvalidTokenException;
 import hhplus.ticketing.domain.token.models.Token;
@@ -20,11 +20,11 @@ public class JedisWaitingQueueManager implements WaitingQueueManager {
     private static final String WAITING_KEYNAME = "WAITINGQUEUE:CONCERT_ID";
 
     public boolean exists(String keyName, Token token){
-        return jedis.zscore(keyName, token.getClaim()) != null;
+        return jedis.zscore(keyName, token.getJwt()) != null;
     }
 
     public long getWaitingNo(String keyName, Token token){
-        return jedis.zrank(keyName, token.getClaim()) + 1;
+        return jedis.zrank(keyName, token.getJwt()) + 1;
     }
 
     @Override
@@ -42,13 +42,13 @@ public class JedisWaitingQueueManager implements WaitingQueueManager {
     public WaitingInfo insertInWaitingQueue(Token token) {
         String keyName = WAITING_KEYNAME + token.getConcertId();
 
-        jedis.zadd(keyName, token.getTimeScale(), token.getClaim());
+        jedis.zadd(keyName, token.getTimeScale(), token.getJwt());
         return new WaitingInfo(token.getUserId(), getWaitingNo(keyName, token), token.getIssuedAt());
     }
 
     @Override
     public void deleteFromWaitingQueue(Token token) {
-        jedis.zrem(WAITING_KEYNAME + token.getConcertId(), token.getClaim());
+        jedis.zrem(WAITING_KEYNAME + token.getConcertId(), token.getJwt());
     }
 
     @Override
@@ -64,7 +64,7 @@ public class JedisWaitingQueueManager implements WaitingQueueManager {
 
     @Override
     public void remove(Token token) {
-        jedis.zrem(WAITING_KEYNAME + token.getConcertId(), token.getClaim());
+        jedis.zrem(WAITING_KEYNAME + token.getConcertId(), token.getJwt());
     }
 
     @Override

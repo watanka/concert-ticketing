@@ -3,7 +3,7 @@ package hhplus.ticketing.api.watingqueue.controller;
 import hhplus.ticketing.api.watingqueue.dto.TokenRequest;
 import hhplus.ticketing.api.watingqueue.dto.TokenResponse;
 import hhplus.ticketing.api.watingqueue.dto.WaitingInfoResponse;
-import hhplus.ticketing.domain.watingqueue.models.WaitingInfo;
+import hhplus.ticketing.domain.token.models.WaitingInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Tag(name="대기열", description="콘서트 예약 입장전 대기열")
 @RestController
@@ -30,6 +32,6 @@ public class WaitingQueueController {
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = WaitingInfoResponse.class)))
     public WaitingInfoResponse queryWaitingNum(@RequestHeader(name="Authorization") String token){
 
-        return WaitingInfoResponse.from(new WaitingInfo(1, 10));
+        return WaitingInfoResponse.from(new WaitingInfo(1, 10, LocalDateTime.now()));
     }
 }

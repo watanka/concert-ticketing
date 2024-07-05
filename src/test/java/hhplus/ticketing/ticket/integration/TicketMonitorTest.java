@@ -1,6 +1,7 @@
 package hhplus.ticketing.ticket.integration;
 
 import hhplus.ticketing.domain.concert.models.Seat;
+import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.ticket.components.TicketMonitor;
 import hhplus.ticketing.domain.ticket.components.TicketService;
 import hhplus.ticketing.domain.ticket.models.Ticket;
@@ -45,6 +46,7 @@ public class TicketMonitorTest {
         Seat seat = Seat.builder()
                 .seatNo(1)
                 .concertId(1)
+                .status(SeatStatus.AVAILABLE)
                 .build();
 
         LocalDateTime time = LocalDateTime.now();

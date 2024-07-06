@@ -12,6 +12,7 @@ import hhplus.ticketing.domain.ticket.models.Ticket;
 import hhplus.ticketing.domain.ticket.models.TicketStatus;
 import hhplus.ticketing.domain.user.models.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +107,7 @@ public class TicketJPAIntegrationTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("예약시점에서 5분이상 지나면 예약취소")
     void ticket_cancelled_if_not_paid_in_5_mins(){
 

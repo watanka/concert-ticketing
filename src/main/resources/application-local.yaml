@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:h2:mem:${MYSQL_DATABASE}
+    driverClassName: org.h2.Driver
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  h2:
+    console:
+      enabled: true
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 2000
+    maxTotal: 50
+    maxIdle: 10
+    minIdle: 1
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE

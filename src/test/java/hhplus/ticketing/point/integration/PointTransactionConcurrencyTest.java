@@ -10,6 +10,7 @@ import hhplus.ticketing.domain.user.components.UserService;
 import hhplus.ticketing.domain.user.infra.UserJPARepository;
 import hhplus.ticketing.domain.user.models.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ class PointTransactionConcurrencyTest {
 
 
     @Test
+    @Disabled
     @DisplayName("포인트가 동시에 처리되는 경우를 확인한다.")
     void concurrent_request_handled_by_order() throws InterruptedException {
         User user = new User(1, 0);

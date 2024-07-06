@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: sa
+      MYSQL_PASSWORD:
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  springboot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: concert-ticketing
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE}
+      - SPRING_CONFIG_LOCATION=/config/application-${SPRING_PROFILES_ACTIVE}.yml
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_REDIS_HOST=redis
+    volumes:
+      - ./application.yml:/config/application-local.yml
+      - ./application-dev.yml:/config/application-dev.yml
+      - ./application-prod.yml:/config/application-prod.yml
+
+volumes:
+  mysql_data:

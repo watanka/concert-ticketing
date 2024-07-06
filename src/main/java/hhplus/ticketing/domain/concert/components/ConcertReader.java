@@ -28,9 +28,6 @@ public class ConcertReader {
         return repository.findConcertById(concertId);
     }
 
-    public ShowTime findShowTime(long concertId, LocalDateTime showTime){
-        return repository.findShowTimeByConcertIdAndTime(concertId, showTime);
-    }
 
     public List<ShowTime> getShowTimeList(long concertId) {
         return repository.getShowTimeListByConcertId(concertId);

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    restart: always
+    healthcheck:
+      test: "mysql -uroot -p$DB_ROOT_PASSWORD -e 'select 1;'"
+      interval: 1s
+      retries: 20
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    healthcheck:
+      test: "redis-cli ping"
+      interval: 1s
+      retries: 20
+    ports:
+      - "6379:6379"
+
+  springboot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROFILE: ${PROFILE}
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASSWORD: ${DB_PASSWORD}
+    container_name: concert-ticketing
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${PROFILE}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME}
+      SPRING_DATASOURCE_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_REDIS_HOST: ${SPRING_REDIS_HOST}
+
+
+volumes:
+  mysql_data:

@@ -1,4 +1,4 @@
-package hhplus.ticketing.point.integration;
+package hhplus.ticketing.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

@@ -1,16 +1,14 @@
 spring:
-  profiles:
-    active: local
   datasource:
-    url: jdbc:h2:mem:${MYSQL_DATABASE}
+    url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
+    username: test-user
+    password:
   h2:
     console:
       enabled: true
   redis:
-    host: localhost
+    host: redis
     port: 6379
     timeout: 2000
     maxTotal: 50

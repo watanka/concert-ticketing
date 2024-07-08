@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity(name="showtime")
 @NoArgsConstructor
@@ -50,5 +51,18 @@ public class ShowTimeEntity {
                 .time(showTime.getTime())
                 .concertHall(showTime.getConcertHall())
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShowTimeEntity that = (ShowTimeEntity) o;
+        return concertId == that.concertId && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(concertId, time);
     }
 }

@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity(name="seat")
 @NoArgsConstructor
@@ -41,6 +42,7 @@ public class SeatEntity {
     @Column(name="concert_hall")
     private ConcertHall concertHall;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="status")
     private SeatStatus status;
 
@@ -65,5 +67,18 @@ public class SeatEntity {
                 .showTime(seat.getShowTime())
                 .status(seat.getStatus())
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SeatEntity that = (SeatEntity) o;
+        return concertId == that.concertId && seatNo == that.seatNo && Objects.equals(showTime, that.showTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(concertId, showTime, seatNo);
     }
 }

@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity(name="concert")
 @Getter
 @NoArgsConstructor
@@ -44,5 +46,18 @@ public class ConcertEntity {
                 .name(concertEntity.getName())
                 .performerName(concertEntity.getPerformerName())
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConcertEntity that = (ConcertEntity) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

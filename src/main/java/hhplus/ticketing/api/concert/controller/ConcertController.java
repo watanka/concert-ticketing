@@ -27,42 +27,35 @@ import java.util.List;
 public class ConcertController {
 
     @Autowired
-    ConcertReader concertReader;
+    private final ConcertReader concertReader;
 
     @Operation(summary="콘서트 조회", description="현재 진행중인 콘서트 리스트를 조회합니다.")
     @GetMapping("/concerts")
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = ConcertResponse.class))))
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = Concert.class))))
     List<Concert> getConcertList(@RequestHeader(name="Authorization") String token){
+
         return concertReader.getConcertList();
-//        return List.of(new Concert(1, "뉴진스 단독 콘서트", "뉴진스"));
 
     }
 
     @Operation(summary="공연시간 조회", description="콘서트 공연시간 리스트를 조회합니다.")
     @GetMapping("/concerts/{concertId}")
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = ShowTimeListResponse.class))))
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = ShowTime.class))))
     List<ShowTime> getShowTimeList(@RequestHeader(name="Authorization") String token,
                                          @PathVariable(name="concertId") long concertId){
-        LocalDateTime time = LocalDateTime.of(2024, 6,26,15,0);
 
         return concertReader.getShowTimeList(concertId);
-//        return List.of(new ShowTime(1, time, ConcertHall.JAMSIL));
     }
 
     @Operation(summary="좌석 조회", description="공연시간의 좌석 리스트를 조회합니다.")
     @GetMapping("/concerts/{concertId}/{showTime}")
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = SeatListResponse.class))))
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = Seat.class))))
     List<Seat> getSeatList(@RequestHeader(name="Authorization") String token,
                                  @PathVariable(name="concertId") long concertId,
                                  @PathVariable(name="showTime") String showTime){
-//        LocalDateTime time = LocalDateTime.of(2024, 6,26,15,0);
 
         return concertReader.getSeatList(concertId, LocalDateTime.parse(showTime));
 
-//        return List.of(
-//                new Seat(1, 1,  "아이유 10주년 콘서트", ConcertHall.JAMSIL, time, SeatStatus.AVAILABLE),
-//                new Seat(1, 2, "뉴진스 단독 콘서트", ConcertHall.LOTTE_TOWER, time, SeatStatus.AVAILABLE)
-//                );
 
     }
 

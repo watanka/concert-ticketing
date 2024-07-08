@@ -18,4 +18,6 @@ public interface TicketRepository {
     Ticket save(Ticket ticket);
 
     List<Ticket> findAllPendingTicket();
+
+    List<Ticket> findAllTicketbyUserId(long userId);
 }

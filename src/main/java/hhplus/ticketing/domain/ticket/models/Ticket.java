@@ -57,4 +57,8 @@ public class Ticket {
     public ConcertHall getConcertHall() {
         return seat.getConcertHall();
     }
+
+    public String getConcertName() {
+        return seat.getConcertName();
+    }
 }

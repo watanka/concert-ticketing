@@ -1,8 +1,13 @@
 package hhplus.ticketing.api.ticket.dto;
 
 
-public record PostTicketRequest(long userId,
-        long showTimeId,
+import java.time.LocalDateTime;
+
+public record PostTicketRequest(
+        long userId,
+        long price,
+        long concertId,
+        LocalDateTime showTime,
         long seatId
 ) {
 

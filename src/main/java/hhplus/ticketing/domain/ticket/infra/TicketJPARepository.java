@@ -25,4 +25,6 @@ public interface TicketJPARepository extends JpaRepository<TicketEntity, Long> {
                                                   @Param("seatNo") long seatNo);
 
     List<TicketEntity> findAllByStatus(TicketStatus status);
+
+    List<TicketEntity> findAllByUserId(long userId);
 }

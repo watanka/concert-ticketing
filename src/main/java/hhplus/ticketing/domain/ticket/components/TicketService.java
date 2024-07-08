@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +52,9 @@ public class TicketService {
         ticket.updateStatus(TicketStatus.REGISTERED);
         ticketRepository.save(ticket);
         return ticket;
+    }
+
+    public List<Ticket> getTicketList(long userId){
+        return ticketRepository.findAllTicketbyUserId(userId);
     }
 }

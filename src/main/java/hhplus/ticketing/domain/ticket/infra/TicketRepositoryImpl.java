@@ -59,4 +59,11 @@ public class TicketRepositoryImpl implements TicketRepository {
         return ticketEntityList.stream()
                 .map(TicketEntity::to).toList();
     }
+
+    @Override
+    public List<Ticket> findAllTicketbyUserId(long userId) {
+        List<TicketEntity> ticketEntityList = ticketJPARepository.findAllByUserId(userId);
+        return ticketEntityList.stream()
+                .map(TicketEntity::to).toList();
+    }
 }

@@ -56,7 +56,7 @@ class PointTransactionJPAIntegrationTest {
         User user = setUser(1, 0);
         userService.save(user);
         pointService.recordPointTransaction(user.getId(), rechargePoint, LocalDateTime.now());
-        userService.updateBalance(user, rechargePoint);
+        userService.updateBalance(user.getId(), rechargePoint);
 
 
         User userFound = userService.findById(user.getId());
@@ -78,8 +78,7 @@ class PointTransactionJPAIntegrationTest {
         userService.save(user);
         //when
         pointService.recordPointTransaction(user.getId(), usePoint, LocalDateTime.now());
-        userService.updateBalance(user, usePoint);
-        userService.save(user);
+        userService.updateBalance(user.getId(), usePoint);
         //then
         User userFound = userService.findById(user.getId());
         assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePointAmount);
@@ -98,7 +97,7 @@ class PointTransactionJPAIntegrationTest {
 
 
         assertThrows(InsufficientBalanceException.class,
-                () -> userService.updateBalance(user, usePoint));
+                () -> userService.updateBalance(user.getId(), usePoint));
     }
 
     @Test

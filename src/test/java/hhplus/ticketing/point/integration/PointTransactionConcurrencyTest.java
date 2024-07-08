@@ -60,7 +60,7 @@ class PointTransactionConcurrencyTest {
         for (int i = 0; i < numThreads; i++) {
             executorService.execute(() ->{
                     Point rechargePoint = new Point(100, PointType.RECHARGE);
-                    pointFacade.transact(user, rechargePoint);
+                    pointFacade.transact(user.getId(), rechargePoint);
 
                     latch.countDown();
             });
@@ -87,7 +87,7 @@ class PointTransactionConcurrencyTest {
         userService.save(user);
 
         Point point1 = new Point(1000, PointType.RECHARGE);
-        userService.updateBalance(user, point1);
+        userService.updateBalance(user.getId(), point1);
 
 
     }

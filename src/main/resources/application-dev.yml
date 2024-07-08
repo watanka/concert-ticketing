@@ -1,6 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/dev-db
+    initialization-mode: always
+    data:
+      - classpath:sql/create-concert-domain.sql
+      - classpath:sql/create-ticket-domain.sql
+      - classpath:sql/create-point-domain.sql
+      - classpath:sql/create-payment-domain.sql
+      - classpath:sql/create-user-domain.sql
+    url: jdbc:mysql://mysql:3306/dev-db?serverTimezone=Asia/Seoul
     driverClassName: com.mysql.cj.jdbc.Driver
     username: sa
     password:

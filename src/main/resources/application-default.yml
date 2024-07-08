@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;TIME ZONE=UTC
     driverClassName: org.h2.Driver
     username: test-user
     password:
@@ -15,7 +15,20 @@ spring:
     maxIdle: 10
     minIdle: 1
   jpa:
+    defer-datasource-initialization: true
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  sql:
+    init:
+      dataLocations:
+        - classpath:sql/create-concert-domain.sql
+        - classpath:sql/create-ticket-domain.sql
+        - classpath:sql/create-point-domain.sql
+        - classpath:sql/create-payment-domain.sql
+        - classpath:sql/create-user-domain.sql
 
 logging:
   level:

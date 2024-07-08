@@ -21,8 +21,8 @@ public class PaymentService {
         return paymentTransactionRepository.findByUserId(userId);
     }
 
-    public PaymentTransaction recordPaymentTransaction(Ticket ticket, User user) {
-        PaymentTransaction paymentTransaction = new PaymentTransaction(user.getId(), ticket.getPrice(), ticket.getId(), LocalDateTime.now());
+    public PaymentTransaction recordPaymentTransaction(Ticket ticket, long userId) {
+        PaymentTransaction paymentTransaction = new PaymentTransaction(userId, ticket.getPrice(), ticket.getId(), LocalDateTime.now());
         paymentTransactionRepository.save(paymentTransaction);
         return paymentTransaction;
     }

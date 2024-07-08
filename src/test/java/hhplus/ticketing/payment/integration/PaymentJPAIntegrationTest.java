@@ -50,7 +50,7 @@ public class PaymentJPAIntegrationTest {
                 .concertName("아이유 10주년 콘서트")
                 .concertHall(ConcertHall.JAMSIL)
                 .showTime(LocalDateTime.now())
-                .status(SeatStatus.RESERVED)
+                .status(SeatStatus.AVAILABLE)
                 .build();
 
     }
@@ -71,8 +71,7 @@ public class PaymentJPAIntegrationTest {
     void fail_payment_when_point_is_not_enough(){
         User user = setUser(0);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
-
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
 
         assertThrows(InsufficientBalanceException.class, () ->
@@ -84,7 +83,8 @@ public class PaymentJPAIntegrationTest {
     void deduct_point_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
+        userService.save(user);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
         User foundUser = userService.findById(user.getId());
@@ -96,13 +96,13 @@ public class PaymentJPAIntegrationTest {
     void ticket_status_reserved_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat,100000, user.getId());
-
+        userService.save(user);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
-        Ticket foundTicket = ticketService.findByUserId(user.getId());
+        List<Ticket> foundTicketList = ticketService.findByUserId(user.getId());
 
-        assertThat(foundTicket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
+        assertThat(foundTicketList.get(1).getStatus()).isEqualTo(TicketStatus.REGISTERED);
     }
 
     @Test
@@ -110,12 +110,14 @@ public class PaymentJPAIntegrationTest {
     void payment_left_payment_transaction(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
+        userService.save(user);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
+
 
         paymentFacade.processPayment(ticket, user, LocalDateTime.now());
         List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getId());
 
-        PaymentTransaction transaction = transactions.get(0);
+        PaymentTransaction transaction = transactions.get(1);
 
         Assertions.assertThat(transaction.userId()).isEqualTo(user.getId());
         Assertions.assertThat(transaction.price()).isEqualTo(ticket.getPrice());

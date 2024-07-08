@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository {
-    Ticket findByUserId(long userId);
+    List<Ticket> findByUserId(long userId);
 
     List<Ticket> findByConcertIdAndShowTime(long concertId, LocalDateTime showTime);
 

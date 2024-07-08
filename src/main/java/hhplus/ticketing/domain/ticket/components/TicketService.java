@@ -40,7 +40,7 @@ public class TicketService {
         return ticket;
 
     }
-    public Ticket findByUserId(long userId) {
+    public List<Ticket> findByUserId(long userId) {
         return ticketRepository.findByUserId(userId);
     }
 

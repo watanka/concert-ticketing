@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,10 +76,10 @@ public class TicketJPAIntegrationTest {
     void query_ticket_by_user_id(){
         ticketService.register(user.getId(),100000, seat, LocalDateTime.now());
 
-        Ticket ticket = ticketService.findByUserId(user.getId());
+        List<Ticket> ticket = ticketService.findByUserId(user.getId());
 
-        assertThat(ticket.getUserId()).isEqualTo(user.getId());
-        assertThat(ticket.getSeatNo()).isEqualTo(seat.getSeatNo());
+        assertThat(ticket.get(0).getUserId()).isEqualTo(user.getId());
+        assertThat(ticket.get(0).getSeatNo()).isEqualTo(seat.getSeatNo());
     }
 
     @Test
@@ -86,12 +87,12 @@ public class TicketJPAIntegrationTest {
     void ticket_includes_seat_info_and_date(){
         Ticket ticket = ticketService.register(user.getId(),100000, seat, LocalDateTime.now());
 
-        Ticket foundTicket = ticketService.findByUserId(user.getId());
+        List<Ticket> foundTicketList = ticketService.findByUserId(user.getId());
 
 
-        assertThat(foundTicket.getShowTime()).isEqualTo(ticketDate);
-        assertThat(foundTicket.getSeatNo()).isEqualTo(seatNo);
-        assertThat(foundTicket.getConcertHall()).isEqualTo(concertHall);
+        assertThat(foundTicketList.get(0).getShowTime()).isEqualTo(ticketDate);
+        assertThat(foundTicketList.get(0).getSeatNo()).isEqualTo(seatNo);
+        assertThat(foundTicketList.get(0).getConcertHall()).isEqualTo(concertHall);
     }
 
 
@@ -101,9 +102,9 @@ public class TicketJPAIntegrationTest {
         //given 티켓이 발행되었는데
         ticketService.register(user.getId(),100000, seat, LocalDateTime.now());
 
-        Ticket foundTicket = ticketService.findByUserId(user.getId());
+        List<Ticket> foundTicketList = ticketService.findByUserId(user.getId());
 
-        assertThat(foundTicket.getStatus()).isEqualTo(TicketStatus.PENDING);
+        assertThat(foundTicketList.get(0).getStatus()).isEqualTo(TicketStatus.PENDING);
     }
 
     @Test

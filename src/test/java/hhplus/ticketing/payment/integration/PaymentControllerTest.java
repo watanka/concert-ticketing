@@ -2,6 +2,7 @@ package hhplus.ticketing.payment.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hhplus.ticketing.api.payment.dto.PaymentRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class PaymentControllerTest {
 
 
     @Test
+    @DisplayName("결제 진행 후, 결제내역을 조회한다.")
     void transact_payment() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/payments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -40,6 +42,22 @@ public class PaymentControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/payment_history")
+                        .param("userId", String.valueOf(1))
+                )
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[1].ticketId")
+                        .value(3))
+                .andExpect(jsonPath("$[1].orderTotal")
+                        .value(200000))
+                .andDo(print());
+
+
+
     }
 
 
@@ -51,12 +69,12 @@ public class PaymentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.paymentHistory[0].ticketId")
+                .andExpect(jsonPath("$[0].ticketId")
                         .value(1))
-                .andExpect(jsonPath("$.paymentHistory[0].transactionTime")
-                        .value("2024-06-27T00:30"))
-                .andExpect(jsonPath("$.paymentHistory[0].orderTotal")
-                        .value(200000))
+                .andExpect(jsonPath("$[0].transactionTime")
+                        .value("2024-05-29T19:34"))
+                .andExpect(jsonPath("$[0].orderTotal")
+                        .value(50000))
                 .andDo(print());
 
     }

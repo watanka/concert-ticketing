@@ -18,10 +18,12 @@ public class TicketRepositoryImpl implements TicketRepository {
     private final TicketJPARepository ticketJPARepository;
 
     @Override
-    public Ticket findByUserId(long userId) {
-        TicketEntity ticketEntity = ticketJPARepository.findByUserId(userId);
+    public List<Ticket> findByUserId(long userId) {
+        List<TicketEntity> ticketEntityList = ticketJPARepository.findByUserId(userId);
 
-        return TicketEntity.to(ticketEntity);
+        return ticketEntityList.stream()
+                .map(TicketEntity::to)
+                .toList();
     }
 
     @Override

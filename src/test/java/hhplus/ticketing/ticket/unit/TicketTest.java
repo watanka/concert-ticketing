@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,10 +71,10 @@ public class TicketTest {
     void query_ticket_by_user_id(){
         ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
-        Ticket ticket = ticketService.findByUserId(user.getId());
+        List<Ticket> ticket = ticketService.findByUserId(user.getId());
 
-        assertThat(ticket.getUserId()).isEqualTo(user.getId());
-        assertThat(ticket.getSeatNo()).isEqualTo(seat.getSeatNo());
+        assertThat(ticket.get(0).getUserId()).isEqualTo(user.getId());
+        assertThat(ticket.get(0).getSeatNo()).isEqualTo(seat.getSeatNo());
     }
 
     @Test

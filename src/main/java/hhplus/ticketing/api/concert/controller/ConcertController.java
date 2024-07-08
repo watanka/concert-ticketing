@@ -1,8 +1,4 @@
 package hhplus.ticketing.api.concert.controller;
-
-import hhplus.ticketing.api.concert.dto.SeatListResponse;
-import hhplus.ticketing.api.concert.dto.ShowTimeListResponse;
-import hhplus.ticketing.api.concert.dto.ConcertResponse;
 import hhplus.ticketing.domain.concert.components.ConcertReader;
 import hhplus.ticketing.domain.concert.models.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +38,7 @@ public class ConcertController {
     @GetMapping("/concerts/{concertId}")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = ShowTime.class))))
     List<ShowTime> getShowTimeList(@RequestHeader(name="Authorization") String token,
-                                         @PathVariable(name="concertId") long concertId){
+                                   @PathVariable(name="concertId") long concertId){
 
         return concertReader.getShowTimeList(concertId);
     }
@@ -51,8 +47,8 @@ public class ConcertController {
     @GetMapping("/concerts/{concertId}/{showTime}")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(array=@ArraySchema(schema=@Schema(implementation = Seat.class))))
     List<Seat> getSeatList(@RequestHeader(name="Authorization") String token,
-                                 @PathVariable(name="concertId") long concertId,
-                                 @PathVariable(name="showTime") String showTime){
+                           @PathVariable(name="concertId") long concertId,
+                           @PathVariable(name="showTime") String showTime){
 
         return concertReader.getSeatList(concertId, LocalDateTime.parse(showTime));
 

@@ -55,7 +55,10 @@ public class PointFacadeTest {
         long pointAmount = 10000;
         Point rechargePoint = new Point(pointAmount, PointType.RECHARGE);
         User user = setUser(1, 0);
-        pointFacade.transact(user, rechargePoint);
+        userService.save(user);
+
+
+        pointFacade.transact(user.getId(), rechargePoint);
 
 
         User userFound = userService.findById(user.getId());
@@ -74,8 +77,9 @@ public class PointFacadeTest {
 
         Point usePoint = new Point(usePointAmount, PointType.USE);
         User user = setUser(1, pointAmount);
+        userService.save(user);
         //when
-        pointFacade.transact(user, usePoint);
+        pointFacade.transact(user.getId(), usePoint);
         //then
         User userFound = userService.findById(user.getId());
         assertThat(userFound.getBalance()).isEqualTo(pointAmount-usePointAmount);
@@ -94,7 +98,7 @@ public class PointFacadeTest {
 
 
         assertThrows(InsufficientBalanceException.class,
-                () -> pointFacade.transact(user, usePoint));
+                () -> pointFacade.transact(user.getId(), usePoint));
     }
 
     @Test
@@ -106,12 +110,13 @@ public class PointFacadeTest {
         User user = setUser(userId, 0);
         long rechargePointAmount = 50000;
         long usePointAmount = 30000;
+        userService.save(user);
 
         Point rechargePoint = new Point(rechargePointAmount, PointType.RECHARGE);
         Point usePoint = new Point(usePointAmount, PointType.USE);
 
-        pointFacade.transact(user, rechargePoint);
-        pointFacade.transact(user, usePoint);
+        pointFacade.transact(user.getId(), rechargePoint);
+        pointFacade.transact(user.getId(), usePoint);
 
         List<PointTransaction> pointTransactionList = pointService.queryTransactions(userId);
         assertThat(pointTransactionList).hasSize(2);

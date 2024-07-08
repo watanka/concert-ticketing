@@ -23,7 +23,8 @@ public class UserService {
         return user;
     }
 
-    public User updateBalance(User user, Point point){
+    public User updateBalance(long userId, Point point){
+        User user = userRepository.findById(userId);
         user.updatePoint(point);
         userRepository.save(user);
         return user;

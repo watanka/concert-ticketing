@@ -10,14 +10,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@Entity(name="`user`")
+@Entity(name="users")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class UserEntity {
     @Id
-    long id;
+    private long id;
     @Column(name="balance")
     private long balance;
 

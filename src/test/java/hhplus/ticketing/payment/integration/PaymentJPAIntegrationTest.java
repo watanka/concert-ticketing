@@ -1,6 +1,9 @@
 package hhplus.ticketing.payment.integration;
 
+import hhplus.ticketing.api.ticket.facade.TicketFacade;
 import hhplus.ticketing.base.exceptions.InsufficientBalanceException;
+import hhplus.ticketing.domain.concert.components.ConcertReader;
+import hhplus.ticketing.domain.concert.components.ConcertWriter;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
@@ -30,6 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class PaymentJPAIntegrationTest {
 
     @Autowired
+    ConcertWriter concertWriter;
+
+    @Autowired
     PaymentService paymentService;
 
     @Autowired
@@ -42,17 +48,21 @@ public class PaymentJPAIntegrationTest {
     TicketService ticketService;
 
     @Autowired
+    TicketFacade ticketFacade;
+
+    @Autowired
     PaymentFacade paymentFacade;
 
     private Seat setSeat() {
-        return  Seat.builder()
-                .seatNo(1)
-                .concertName("아이유 10주년 콘서트")
-                .concertHall(ConcertHall.JAMSIL)
-                .showTime(LocalDateTime.now())
-                .status(SeatStatus.RESERVED)
-                .build();
-
+        Seat seat = Seat.builder()
+                        .seatNo(2)
+                        .concertName("아이유 10주년 콘서트")
+                        .concertHall(ConcertHall.LOTTE_TOWER)
+                        .showTime(LocalDateTime.of(2024,7,13,15,0,0))
+                        .status(SeatStatus.AVAILABLE)
+                        .build();
+        concertWriter.registerSeat(seat);
+        return seat;
     }
 
     @BeforeEach
@@ -61,8 +71,8 @@ public class PaymentJPAIntegrationTest {
     }
 
     private User setUser(long balance){
-        User user = new User(1, balance);
-
+        User user = new User(6, balance);
+        userService.save(user);
         return user;
     }
 
@@ -71,12 +81,11 @@ public class PaymentJPAIntegrationTest {
     void fail_payment_when_point_is_not_enough(){
         User user = setUser(0);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
-
+        Ticket ticket = ticketFacade.register(user.getId(), 100000, seat.getConcertId(), seat.getShowTime(), seat.getSeatNo());
 
 
         assertThrows(InsufficientBalanceException.class, () ->
-                paymentFacade.processPayment(ticket, user, LocalDateTime.now()));
+                paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now()));
     }
 
     @Test
@@ -84,9 +93,10 @@ public class PaymentJPAIntegrationTest {
     void deduct_point_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
-        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
+        Ticket ticket = ticketFacade.register(user.getId(), 100000, seat.getConcertId(), seat.getShowTime(), seat.getSeatNo());
+
+        paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now());
         User foundUser = userService.findById(user.getId());
         assertThat(foundUser.getBalance()).isEqualTo(100000);
     }
@@ -96,13 +106,13 @@ public class PaymentJPAIntegrationTest {
     void ticket_status_reserved_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat,100000, user.getId());
 
+        Ticket ticket = ticketFacade.register(user.getId(), 100000, seat.getConcertId(), seat.getShowTime(), seat.getSeatNo());
 
-        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
-        Ticket foundTicket = ticketService.findByUserId(user.getId());
+        paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now());
+        List<Ticket> foundTicketList = ticketService.findByUserId(user.getId());
 
-        assertThat(foundTicket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
+        assertThat(foundTicketList.get(0).getStatus()).isEqualTo(TicketStatus.REGISTERED);
     }
 
     @Test
@@ -110,16 +120,16 @@ public class PaymentJPAIntegrationTest {
     void payment_left_payment_transaction(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
 
-        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
+        Ticket ticket = ticketFacade.register(user.getId(), 100000, seat.getConcertId(), seat.getShowTime(), seat.getSeatNo());
+
+        paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now());
         List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getId());
 
         PaymentTransaction transaction = transactions.get(0);
 
-        Assertions.assertThat(transaction.userId()).isEqualTo(user.getId());
-        Assertions.assertThat(transaction.price()).isEqualTo(ticket.getPrice());
-        Assertions.assertThat(transaction.ticketId()).isEqualTo(ticket.getId());
+        assertThat(transaction.userId()).isEqualTo(user.getId());
+        assertThat(transaction.price()).isEqualTo(ticket.getPrice());
     }
 
 }

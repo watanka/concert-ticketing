@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TicketJPARepository extends JpaRepository<TicketEntity, Long> {
 
-    TicketEntity findByUserId(long userId);
+    List<TicketEntity> findByUserId(long userId);
     TicketEntity findById(long id);
 
     List<TicketEntity> findAllByConcertIdAndShowTime(long concertId, LocalDateTime showTime);

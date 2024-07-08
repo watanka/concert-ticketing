@@ -48,7 +48,7 @@ public class PaymentTest {
                 .concertName("아이유 10주년 콘서트")
                 .concertHall(ConcertHall.JAMSIL)
                 .showTime(LocalDateTime.now())
-                .status(SeatStatus.RESERVED)
+                .status(SeatStatus.AVAILABLE)
                 .build();
 
     }
@@ -64,12 +64,12 @@ public class PaymentTest {
     void fail_payment_when_point_is_not_enough(){
         User user = setUser(0);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat,100000, user.getId());
-
+        userService.save(user);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
 
         assertThrows(InsufficientBalanceException.class, () ->
-                paymentFacade.processPayment(ticket, user, LocalDateTime.now()));
+                paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now()));
     }
 
     @Test
@@ -77,9 +77,10 @@ public class PaymentTest {
     void deduct_point_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
+        userService.save(user);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
-        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
+        paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now());
 
 
         assertThat(user.getBalance()).isEqualTo(100000);
@@ -90,9 +91,11 @@ public class PaymentTest {
     void ticket_status_reserved_when_payment_complete(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
+        userService.save(user);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
-        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
+
+        paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now());
 
         assertThat(ticket.getStatus()).isEqualTo(TicketStatus.REGISTERED);
     }
@@ -102,9 +105,10 @@ public class PaymentTest {
     void payment_left_payment_transaction(){
         User user = setUser(200000);
         Seat seat = setSeat();
-        Ticket ticket = new Ticket(seat, 100000, user.getId());
+        userService.save(user);
+        Ticket ticket = ticketService.register(user.getId(), 100000, seat, LocalDateTime.now());
 
-        paymentFacade.processPayment(ticket, user, LocalDateTime.now());
+        paymentFacade.processPayment(ticket.getId(), ticket.getPrice(), user.getId(), LocalDateTime.now());
 
         List<PaymentTransaction> transactions = paymentService.findTransactionHistory(user.getId());
 

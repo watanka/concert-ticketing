@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class MemoryTicketRepository implements TicketRepository {
 
-    Map<Long, Ticket> ticketByUserIdMap = new HashMap<>();
+    Map<Long, List<Ticket>> ticketByUserIdMap = new JDefaultDict<>(k -> new ArrayList<>());
     Map<Long, Ticket> ticketByIdMap = new HashMap<>();
     Map<String, List<Ticket>> ticketsByConcertIdAndShowTimeMap = new JDefaultDict<>(k -> new ArrayList<>());
 
     @Override
-    public Ticket findByUserId(long userId) {
+    public List<Ticket> findByUserId(long userId) {
         return ticketByUserIdMap.get(userId);
     }
 
@@ -29,7 +29,6 @@ public class MemoryTicketRepository implements TicketRepository {
     @Override
     public boolean existsByConcertIdAndShowTimeAndSeatNo(long concertId, LocalDateTime showTime, long seatNo) {
         List<Ticket> ticketList = ticketsByConcertIdAndShowTimeMap.get(createShowTimeKey(concertId, showTime));
-        System.out.println(ticketsByConcertIdAndShowTimeMap);
         return ticketList.stream().anyMatch(ticket -> ticket.getSeatNo() == seatNo);
     }
 
@@ -40,7 +39,7 @@ public class MemoryTicketRepository implements TicketRepository {
 
     @Override
     public Ticket save(Ticket ticket) {
-        ticketByUserIdMap.put(ticket.getUserId(), ticket);
+        ticketByUserIdMap.get(ticket.getUserId()).add(ticket);
         ticketByIdMap.put(ticket.getId(), ticket);
         ticketsByConcertIdAndShowTimeMap.get(createShowTimeKey(ticket.getConcertId(), ticket.getShowTime())).add(ticket);
         return ticket;
@@ -53,7 +52,7 @@ public class MemoryTicketRepository implements TicketRepository {
 
     @Override
     public List<Ticket> findAllTicketbyUserId(long userId) {
-        return List.of(ticketByUserIdMap.get(userId));
+        return ticketByUserIdMap.get(userId);
     }
 
     private String createShowTimeKey(long concertId, LocalDateTime showTime) {

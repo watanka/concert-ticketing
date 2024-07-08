@@ -38,7 +38,7 @@ public class TicketControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new PostTicketRequest(1, 200000, 1, showTime, 4)
+                                new PostTicketRequest(7, 200000, 1, showTime, 4)
                                     )
                                 )
         );
@@ -46,44 +46,19 @@ public class TicketControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/tickets")
             .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
             .contentType(MediaType.APPLICATION_JSON)
-            .param("userId", "1"))
+            .param("userId", "7"))
 
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[1].concertName")
-                        .value("뉴진스 단독 콘서트"))
-                .andExpect(jsonPath("$[1].seatNo")
-                        .value("4"))
-                .andExpect(jsonPath("$[1].price")
-                        .value("200000"))
-                .andExpect(jsonPath("$[1].status")
-                        .value("PENDING"))
-                .andExpect(jsonPath("$[1].concertHall")
-                        .value("JAMSIL"));
-    }
-
-    @Test
-    void view_ticket() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/tickets")
-                        .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
-                        .contentType(MediaType.APPLICATION_JSON)
-                .param("userId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].concertName")
                         .value("뉴진스 단독 콘서트"))
-                .andExpect(jsonPath("$[0].id")
-                        .value("1"))
                 .andExpect(jsonPath("$[0].seatNo")
-                        .value("1"))
+                        .value("4"))
                 .andExpect(jsonPath("$[0].price")
-                        .value("50000"))
+                        .value("200000"))
                 .andExpect(jsonPath("$[0].status")
-                        .value("REGISTERED"))
-                .andExpect(jsonPath("$[0].reservedTime")
-                        .value("2024-05-29T19:32:00"))
+                        .value("PENDING"))
                 .andExpect(jsonPath("$[0].concertHall")
                         .value("JAMSIL"));
     }

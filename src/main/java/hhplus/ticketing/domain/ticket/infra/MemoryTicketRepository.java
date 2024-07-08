@@ -51,6 +51,11 @@ public class MemoryTicketRepository implements TicketRepository {
         return null;
     }
 
+    @Override
+    public List<Ticket> findAllTicketbyUserId(long userId) {
+        return List.of(ticketByUserIdMap.get(userId));
+    }
+
     private String createShowTimeKey(long concertId, LocalDateTime showTime) {
         return concertId + "_" + showTime.toString();
     }

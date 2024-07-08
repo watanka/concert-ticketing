@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,30 +32,34 @@ public class TicketControllerTest {
 
     @Test
     void reserve_ticket() throws Exception {
+        LocalDateTime showTime = LocalDateTime.of(2024, 7, 13, 15,0);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/tickets")
                         .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new PostTicketRequest(1, 2, 45)
-                        ))
+                                new PostTicketRequest(1, 200000, 1, showTime, 4)
+                                    )
+                                )
+        );
 
-                )
+        mockMvc.perform(MockMvcRequestBuilders.get("/tickets")
+            .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("userId", "1"))
+
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.concertName")
+                .andExpect(jsonPath("$[1].concertName")
                         .value("뉴진스 단독 콘서트"))
-                .andExpect(jsonPath("$.id")
-                        .value("1"))
-                .andExpect(jsonPath("$.seatNo")
-                        .value("3"))
-                .andExpect(jsonPath("$.price")
+                .andExpect(jsonPath("$[1].seatNo")
+                        .value("4"))
+                .andExpect(jsonPath("$[1].price")
                         .value("200000"))
-                .andExpect(jsonPath("$.ticketStatus")
+                .andExpect(jsonPath("$[1].status")
                         .value("PENDING"))
-                .andExpect(jsonPath("$.reservedTime")
-                        .value("2024-06-27T15:30"))
-                .andExpect(jsonPath("$.concertHall")
+                .andExpect(jsonPath("$[1].concertHall")
                         .value("JAMSIL"));
     }
 
@@ -66,19 +72,19 @@ public class TicketControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.ticketList[0].concertName")
+                .andExpect(jsonPath("$[0].concertName")
                         .value("뉴진스 단독 콘서트"))
-                .andExpect(jsonPath("$.ticketList[0].id")
+                .andExpect(jsonPath("$[0].id")
                         .value("1"))
-                .andExpect(jsonPath("$.ticketList[0].seatNo")
-                        .value("3"))
-                .andExpect(jsonPath("$.ticketList[0].price")
-                        .value("200000"))
-                .andExpect(jsonPath("$.ticketList[0].ticketStatus")
-                        .value("PENDING"))
-                .andExpect(jsonPath("$.ticketList[0].reservedTime")
-                        .value("2024-06-27T15:30"))
-                .andExpect(jsonPath("$.ticketList[0].concertHall")
+                .andExpect(jsonPath("$[0].seatNo")
+                        .value("1"))
+                .andExpect(jsonPath("$[0].price")
+                        .value("50000"))
+                .andExpect(jsonPath("$[0].status")
+                        .value("REGISTERED"))
+                .andExpect(jsonPath("$[0].reservedTime")
+                        .value("2024-05-29T19:32:00"))
+                .andExpect(jsonPath("$[0].concertHall")
                         .value("JAMSIL"));
     }
 

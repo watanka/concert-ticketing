@@ -74,6 +74,11 @@ public class ConcertRepositoryImpl implements ConcertRepository {
         return ConcertEntity.to(concertEntity);
     }
 
+    @Override
+    public Seat getSeat(long concertId, LocalDateTime showTime, long seatId) {
+        return SeatEntity.to(seatJPARepository.getSeatByConcertIdAndShowTimeAndSeatNo(concertId, showTime, seatId));
+    }
+
     public void deleteAll(){
         concertJPARepository.deleteAll();
     }

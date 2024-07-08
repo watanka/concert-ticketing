@@ -1,5 +1,6 @@
 package hhplus.ticketing.ticket.integration;
 
+import hhplus.ticketing.api.ticket.facade.TicketFacade;
 import hhplus.ticketing.domain.concert.models.ConcertHall;
 import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
@@ -29,6 +30,9 @@ public class TicketConcurrencyTest {
     @Autowired
     TicketService ticketService;
 
+    @Autowired
+    TicketFacade ticketFacade;
+
     Seat seat = Seat.builder()
                     .seatNo(1)
                     .concertId(1)
@@ -41,6 +45,8 @@ public class TicketConcurrencyTest {
     @Test
     @DisplayName("한 좌석을 동시에 예약요청 시, 하나의 요청만 성공한다.")
     void only_one_request_success_when_concurrent_requests_on_a_seat() throws InterruptedException {
+        LocalDateTime showTime = LocalDateTime.of(2024, 7, 13, 15, 0);
+
         AtomicInteger successCnt = new AtomicInteger();
         AtomicInteger failCnt = new AtomicInteger();
 
@@ -50,7 +56,8 @@ public class TicketConcurrencyTest {
         for (int i = 0; i < numThreads; i++) {
             executorService.execute(() ->{
                 try{
-                    ticketService.register(1, 1000, seat, LocalDateTime.now());
+                    ticketService.register(1, 10000, seat, LocalDateTime.now());
+//                    ticketFacade.register(1, 1000, 1,  showTime, 2, LocalDateTime.now());
                     successCnt.getAndIncrement();
                 } catch (Exception e) {
                     failCnt.getAndIncrement();

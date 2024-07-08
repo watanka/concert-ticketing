@@ -25,6 +25,9 @@ public class TicketEntity {
     @Column(name="concert_id")
     long concertId;
 
+    @Column(name="concert_name")
+    String concertName;
+
     @Enumerated(EnumType.STRING)
     @Column(name="concert_hall")
     ConcertHall concertHall;
@@ -52,6 +55,7 @@ public class TicketEntity {
     public static Ticket to(TicketEntity ticketEntity) {
         Seat seat = Seat.builder()
                     .concertId(ticketEntity.getConcertId())
+                    .concertName(ticketEntity.getConcertName())
                     .showTime(ticketEntity.getShowTime())
                     .seatNo(ticketEntity.getSeatNo())
                     .concertHall(ticketEntity.getConcertHall())
@@ -61,6 +65,7 @@ public class TicketEntity {
                 .id(ticketEntity.getId())
                 .seat(seat)
                 .userId(ticketEntity.getUserId())
+                .price(ticketEntity.getPrice())
                 .status(ticketEntity.getStatus())
                 .reservedTime(ticketEntity.getReservedTime())
                 .build();
@@ -70,6 +75,7 @@ public class TicketEntity {
         return TicketEntity.builder()
                 .id(ticket.getId())
                 .concertId(ticket.getConcertId())
+                .concertName(ticket.getConcertName())
                 .concertHall(ticket.getConcertHall())
                 .showTime(ticket.getShowTime())
                 .price(ticket.getPrice())

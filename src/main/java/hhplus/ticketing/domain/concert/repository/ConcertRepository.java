@@ -22,4 +22,6 @@ public interface ConcertRepository {
     List<Seat> getSeatList(long concertId, LocalDateTime showTime);
 
     Concert findConcertById(long concertId);
+
+    Seat getSeat(long concertId, LocalDateTime showTime, long seatId);
 }

@@ -4,6 +4,6 @@ import hhplus.ticketing.domain.concert.models.Concert;
 
 import java.util.List;
 
-public record ConcertListResponse(List<Concert> concertList) {
+public record ConcertResponse(Concert concert) {
 
 }

@@ -1,6 +1,5 @@
 package hhplus.ticketing.concert.integration;
 
-import hhplus.ticketing.domain.concert.models.ConcertHall;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +34,9 @@ public class ConcertControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$.concertList[0].name")
+                        .andExpect(jsonPath("$[0].name")
                                 .value("뉴진스 단독 콘서트"))
-                        .andExpect(jsonPath("$.concertList[0].performerName")
+                        .andExpect(jsonPath("$.[0].performerName")
                             .value("뉴진스"));
     }
 
@@ -52,26 +51,26 @@ public class ConcertControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.showTimeList[0].time")
-                        .value("2024-06-26T15:00"))
-                .andExpect(jsonPath("$.showTimeList[0].concertHall")
+                .andExpect(jsonPath("$[0].time")
+                        .value("2024-07-13T15:00:00"))
+                .andExpect(jsonPath("$[0].concertHall")
                         .value("JAMSIL"));
     }
 
     @Test
     void view_seat_list_of_the_showtime() throws Exception{
         long concertId = 1;
-        long showTimeId = 1;
+        String showTime  = LocalDateTime.of(2024, 7, 13, 15, 0).toString();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/concerts/"+concertId+"/"+showTimeId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/concerts/"+concertId+"/"+showTime)
                         .header(HttpHeaders.AUTHORIZATION, "TEMPORARY-TOKEN")
                 )
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.seatList[0].seatNo")
-                        .value("1"))
-                .andExpect(jsonPath("$.seatList[0].status")
-                        .value("AVAILABLE"));
+                .andExpect(jsonPath("$[0].seatNo")
+                        .value(1))
+                .andExpect(jsonPath("$[0].status")
+                        .value("RESERVED"));
     }
 }

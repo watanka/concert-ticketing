@@ -45,10 +45,6 @@ public class ConcertReaderIntegrationTest {
         Concert concert2 = new Concert("아이유 10주년 콘서트", "아이유");
         Concert concertRegistered2 = concertWriter.registerConcert(concert2);
 
-
-        for (Concert c : concertReader.getConcertList()) {
-            System.out.println(c.getName() + " " + c.getId());
-        }
         System.out.println(concertRegistered1.getId());
         assertThat(concertReader.findConcert(concertRegistered1.getId()).getPerformerName())
                 .isEqualTo("뉴진스");

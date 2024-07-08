@@ -5,6 +5,7 @@ import hhplus.ticketing.domain.concert.models.Seat;
 import hhplus.ticketing.domain.concert.models.ShowTime;
 import hhplus.ticketing.domain.concert.repository.ConcertRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 
@@ -26,7 +27,6 @@ public class ConcertReader {
     public Concert findConcert(long concertId) {
         return repository.findConcertById(concertId);
     }
-
 
 
     public List<ShowTime> getShowTimeList(long concertId) {

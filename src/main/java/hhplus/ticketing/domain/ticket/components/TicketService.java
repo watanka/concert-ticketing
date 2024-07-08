@@ -35,9 +35,7 @@ public class TicketService {
         }
         seat.updateStatus(SeatStatus.RESERVED);
         Ticket ticket = new Ticket(seat, price, userId, reservedTime);
-        ticketRepository.save(ticket);
-
-        return ticket;
+        return ticketRepository.save(ticket);
 
     }
     public List<Ticket> findByUserId(long userId) {
@@ -48,7 +46,8 @@ public class TicketService {
         return ticketRepository.findById(ticketId);
     }
 
-    public Ticket confirmPayment(Ticket ticket){
+    public Ticket confirmPayment(long ticketId){
+        Ticket ticket = ticketRepository.findById(ticketId);
         ticket.updateStatus(TicketStatus.REGISTERED);
         ticketRepository.save(ticket);
         return ticket;

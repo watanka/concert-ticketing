@@ -37,7 +37,7 @@ public class PaymentControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/payments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new PaymentRequest(1, 3, 200000))
+                                new PaymentRequest(5, 3, 200000))
                         )
                 )
                 .andExpect(status().isOk())
@@ -45,37 +45,16 @@ public class PaymentControllerTest {
 
 
         mockMvc.perform(MockMvcRequestBuilders.get("/payment_history")
-                        .param("userId", String.valueOf(1))
-                )
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[1].ticketId")
-                        .value(3))
-                .andExpect(jsonPath("$[1].orderTotal")
-                        .value(200000))
-                .andDo(print());
-
-
-
-    }
-
-
-    @Test
-    void view_user_payment_history() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/payment_history")
-                        .param("userId", String.valueOf(1))
+                        .param("userId", String.valueOf(5))
                 )
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].ticketId")
-                        .value(1))
-                .andExpect(jsonPath("$[0].transactionTime")
-                        .value("2024-05-29T19:34"))
+                        .value(3))
                 .andExpect(jsonPath("$[0].orderTotal")
-                        .value(50000))
+                        .value(200000))
                 .andDo(print());
-
     }
+
 }

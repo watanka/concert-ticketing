@@ -29,15 +29,15 @@ public class PaymentFacade {
     @Autowired
     private final PaymentService paymentService;
 
-    public PaymentTransaction processPayment(Ticket ticket, long userId, LocalDateTime now) {
-            Point payPoint = new Point(ticket.getPrice(), PointType.USE);
+    public PaymentTransaction processPayment(long ticketId, long price, long userId, LocalDateTime now) {
+            Point payPoint = new Point(price, PointType.USE);
 
             userService.updateBalance(userId, payPoint);
 
             pointService.recordPointTransaction(userId, payPoint, now);
-            ticketService.confirmPayment(ticket);
+            ticketService.confirmPayment(ticketId);
 
-            PaymentTransaction paymentTransaction = paymentService.recordPaymentTransaction(ticket, userId);
+            PaymentTransaction paymentTransaction = paymentService.recordPaymentTransaction(ticketId, price, userId);
 
             return paymentTransaction;
         }

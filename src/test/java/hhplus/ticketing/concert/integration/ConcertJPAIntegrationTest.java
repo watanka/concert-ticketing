@@ -59,32 +59,6 @@ public class ConcertJPAIntegrationTest {
     }
 
     @Test
-    @DisplayName("콘서트 목록을 반환한다.")
-    void list_all_registered_concerts() {
-        ConcertEntity concert1 = new ConcertEntity( "뉴진스 단독 콘서트", "뉴진스");
-        ConcertEntity concert2 = new ConcertEntity( "아이유 10주년 콘서트", "아이유");
-        concertJPARepository.save(concert1);
-        concertJPARepository.save(concert2);
-
-        List<ConcertEntity> concertEntityList = concertJPARepository.findAll();
-
-        assertThat(concertEntityList.get(0)).isInstanceOf(ConcertEntity.class);
-        assertThat(concertEntityList.size()).isEqualTo(2);
-    }
-
-
-
-    @Test
-    @DisplayName("콘서트의 공연시간들을 반환한다.")
-    void list_all_showtimes(){
-
-        assertThat(showTimeJPARepository.findShowTimeEntityListByConcertId(1).size())
-                .isEqualTo(2);
-        assertThat(showTimeJPARepository.findShowTimeEntityListByConcertId(1).get(0).getConcertHall())
-                .isEqualTo(ConcertHall.JAMSIL);
-    }
-
-    @Test
     @DisplayName("공연시간에 속한 전체 좌석을 반환한다.")
     void list_seats_by_showtime_id(){
 

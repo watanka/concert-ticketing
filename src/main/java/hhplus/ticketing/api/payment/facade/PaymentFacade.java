@@ -30,7 +30,7 @@ public class PaymentFacade {
     public PaymentTransaction processPayment(Ticket ticket, User user, LocalDateTime now) {
             Point payPoint = new Point(ticket.getPrice(), PointType.USE);
 
-            userService.updateBalance(user, payPoint);
+            userService.updateBalance(user.getId(), payPoint);
 
             pointService.recordPointTransaction(user.getId(), payPoint, now);
             ticketService.confirmPayment(ticket);

@@ -25,6 +25,7 @@ public class TicketEntity {
     @Column(name="concert_id")
     long concertId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="concert_hall")
     ConcertHall concertHall;
 
@@ -43,6 +44,7 @@ public class TicketEntity {
     @Column(name="user_id")
     long userId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="status")
     TicketStatus status;
 

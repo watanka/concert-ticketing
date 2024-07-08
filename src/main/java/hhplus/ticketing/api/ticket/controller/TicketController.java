@@ -1,10 +1,8 @@
 package hhplus.ticketing.api.ticket.controller;
 
-import hhplus.ticketing.api.point.dto.PointHistoryResponse;
 import hhplus.ticketing.api.ticket.dto.PostTicketRequest;
 import hhplus.ticketing.api.ticket.dto.TicketListResponse;
 import hhplus.ticketing.api.ticket.dto.TicketResponse;
-import hhplus.ticketing.api.watingqueue.dto.TokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

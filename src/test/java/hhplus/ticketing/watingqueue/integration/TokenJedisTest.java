@@ -45,7 +45,7 @@ public class TokenJedisTest {
     @Test
     @DisplayName("없는 토큰을 조회할 경우 예외 처리")
     void query_invalid_token(){
-        Token invalidToken = new Token(1, "INVALID-TOKEN", 1, LocalDateTime.now());
+        Token invalidToken = new Token(1, "INVALID-TOKEN",  LocalDateTime.now());
 
 
         assertThrows(InvalidTokenException.class, () ->
@@ -61,7 +61,7 @@ public class TokenJedisTest {
         Token token = waitingQueueService.register(1, userId, LocalDateTime.now());
         WaitingInfo waitingInfo = waitingQueueService.query(token);
 
-        assertThat(waitingInfo.userId()).isEqualTo(userId);
+        assertThat(waitingInfo.waitingNo()).isEqualTo(1);
     }
 
     @Test
@@ -121,7 +121,6 @@ public class TokenJedisTest {
 
         WaitingInfo waitingInfo1 = queueManager.getWaitingInfoByToken(token1);
 
-        assertThat(waitingInfo1.userId()).isEqualTo(userId1);
         assertThat(waitingInfo1.waitingNo()).isEqualTo(1);
 
         long userId2=2;
@@ -130,7 +129,6 @@ public class TokenJedisTest {
 
         WaitingInfo waitingInfo2 = queueManager.getWaitingInfoByToken(token2);
 
-        assertThat(waitingInfo2.userId()).isEqualTo(userId2);
         assertThat(waitingInfo2.waitingNo()).isEqualTo(2);
     }
 

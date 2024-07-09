@@ -27,7 +27,6 @@ public class TokenManagerTest {
         Token token = tokenManager.issue(concertId, userId, issuedAt);
 
         assertThat(token.getConcertId()).isEqualTo(concertId);
-        assertThat(token.getUserId()).isEqualTo(userId);
         assertThat(token.getIssuedAt()).isEqualTo(issuedAt);
 
     }
@@ -41,7 +40,7 @@ public class TokenManagerTest {
         LocalDateTime issuedAt = LocalDateTime.now();
 
         Token validToken = tokenManager.issue(concertId, userId, issuedAt);
-        Token invalidToken = new Token(concertId, invalidClaim, userId, issuedAt);
+        Token invalidToken = new Token(concertId, invalidClaim, issuedAt);
 
 
         assertThat(tokenManager.validate(validToken)).isTrue();

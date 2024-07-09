@@ -57,7 +57,6 @@ public class TicketConcurrencyTest {
             executorService.execute(() ->{
                 try{
                     ticketService.register(1, 10000, seat, LocalDateTime.now());
-//                    ticketFacade.register(1, 1000, 1,  showTime, 2, LocalDateTime.now());
                     successCnt.getAndIncrement();
                 } catch (Exception e) {
                     failCnt.getAndIncrement();

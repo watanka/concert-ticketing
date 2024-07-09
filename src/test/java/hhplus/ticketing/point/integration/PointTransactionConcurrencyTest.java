@@ -48,7 +48,7 @@ class PointTransactionConcurrencyTest {
 
 
     @Test
-    @Disabled
+//    @Disabled
     @DisplayName("포인트가 동시에 처리되는 경우를 확인한다.")
     void concurrent_request_handled_by_order() throws InterruptedException {
         User user = new User(1, 0);
@@ -72,7 +72,7 @@ class PointTransactionConcurrencyTest {
 
         List<PointTransaction> pointTransactionList = pointService.queryTransactions(user.getId());
         for (PointTransaction p: pointTransactionList) {
-            System.out.println("transaction id: " + p.id() + "\namount: " + p.amount() + "\ntime: " + p.transactionTime());
+            System.out.println("transaction id: " + p.getId() + "\namount: " + p.getAmount() + "\ntime: " + p.getTransactionTime());
         }
 
         assertThat(userFound.getBalance()).isEqualTo(100 * numThreads);
@@ -89,6 +89,9 @@ class PointTransactionConcurrencyTest {
         Point point1 = new Point(1000, PointType.RECHARGE);
         userService.updateBalance(user.getId(), point1);
 
+        User foundUser = userService.findById(user.getId());
+
+        assertThat(foundUser.getBalance()).isEqualTo(1000);
 
     }
 }

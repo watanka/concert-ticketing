@@ -1,4 +1,4 @@
-package hhplus.ticketing.point.integration;
+package hhplus.ticketing.base.redisson;
 
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;

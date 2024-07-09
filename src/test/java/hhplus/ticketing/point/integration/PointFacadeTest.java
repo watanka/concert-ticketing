@@ -120,6 +120,6 @@ public class PointFacadeTest {
 
         List<PointTransaction> pointTransactionList = pointService.queryTransactions(userId);
         assertThat(pointTransactionList).hasSize(2);
-        assertThat(pointTransactionList.get(0).amount()).isEqualTo(rechargePoint.getAmount());
+        assertThat(pointTransactionList.get(0).getAmount()).isEqualTo(rechargePoint.getAmount());
     }
 }

@@ -21,7 +21,6 @@ public class PointService {
 
     public PointTransaction recordPointTransaction(long userId, Point point, LocalDateTime time) {
         PointTransaction pointTransaction = new PointTransaction(userId, time, point.getAmount(), point.getType());
-
         return pointRepository.savePointTransaction(pointTransaction);
     }
 

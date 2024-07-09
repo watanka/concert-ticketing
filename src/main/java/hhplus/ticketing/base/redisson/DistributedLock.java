@@ -1,4 +1,4 @@
-package hhplus.ticketing.api.point.facade;
+package hhplus.ticketing.base.redisson;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

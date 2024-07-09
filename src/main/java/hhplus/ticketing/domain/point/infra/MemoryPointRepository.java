@@ -14,7 +14,7 @@ public class MemoryPointRepository implements PointRepository {
 
 
     public PointTransaction savePointTransaction(PointTransaction pointTransaction) {
-        List<PointTransaction> transactionHistory = pointHistoryMap.get(pointTransaction.userId());
+        List<PointTransaction> transactionHistory = pointHistoryMap.get(pointTransaction.getUserId());
         transactionHistory.add(pointTransaction);
         return pointTransaction;
 

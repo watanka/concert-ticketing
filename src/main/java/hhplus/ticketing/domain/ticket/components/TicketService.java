@@ -1,6 +1,6 @@
 package hhplus.ticketing.domain.ticket.components;
 
-import hhplus.ticketing.api.point.facade.DistributedLock;
+import hhplus.ticketing.base.redisson.DistributedLock;
 import hhplus.ticketing.base.exceptions.UnavailableSeatException;
 import hhplus.ticketing.domain.concert.models.SeatStatus;
 import hhplus.ticketing.domain.ticket.models.Ticket;

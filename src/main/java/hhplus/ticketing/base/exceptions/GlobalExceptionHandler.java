@@ -12,7 +12,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInsufficientBalanceException(InsufficientBalanceException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
-
+//
+//    @ExceptionHandler(InvalidTokenException.class)
+//    public ResponseEntity<String> handleInvalidTokenException(InsufficientBalanceException ex) {
+//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
 
 }

@@ -59,6 +59,48 @@ public class TokenControllerTest {
                         .value(10))
                 .andDo(print());
 
+    @Test
+    @DisplayName("유효하지 않은 토큰을 조회할 경우, 에러가 발생한다.")
+    void query_waiting_num_with_INVALID_token() throws Exception {
+        long concertId = 2;
+        long userId = 1;
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/tokens")
+                        .header(HttpHeaders.AUTHORIZATION, "INVALID-TOKEN")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.valueOf(concertId))
+                )
+                .andExpect(status().isUnauthorized())
+                .andExpect(status().reason("Invalid Token"));
+
+
+    }
+
+
+
+    private Token requestToken(long concertId, long userId) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/tokens")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TokenRequest(concertId, userId))
+                        )
+                )
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        Token token = objectMapper.readValue(jsonResponse, Token.class);
+        return token;
+    }
+
+
+    private boolean isValidToken(Token token){
+        return jwtTokenManager.validate(token) &&
+                token != null &&
+                token.getJwt().split("\\.").length == 3;
     }
 }
 

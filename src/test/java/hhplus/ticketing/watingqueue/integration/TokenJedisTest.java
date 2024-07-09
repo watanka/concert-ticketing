@@ -170,5 +170,52 @@ public class TokenJedisTest {
     }
 
 
+    @Test
+    @DisplayName("같은 아이디로 다시 토큰을 요청할 경우, 다시 대기해야한다.")
+    void request_token_two_times(){
+        long userId = 1;
+        long concertId = 1;
+        waitingQueueService.register(concertId, userId, LocalDateTime.now().minusMinutes(5));
+
+        int numOtherWaits = 30;
+        for (int i=2; i<numOtherWaits+2;i++ ) {
+            waitingQueueService.register(concertId, i, LocalDateTime.now());
+        }
+
+        Token tokenSecond = waitingQueueService.register(concertId, userId, LocalDateTime.now().plusSeconds(10));
+
+        WaitingInfo waitingInfoSecond = waitingQueueService.query(tokenSecond);
+
+        assertThat(waitingInfoSecond.waitingNo()).isNotEqualTo(1);
+    }
+
+
+    @Test
+    @DisplayName("토큰 활성화를 체크한다. JWT 유효성 + 토큰 활성화")
+    void validate_token(){
+        long concertId = 100;
+        long userId = 1;
+        LocalDateTime now = LocalDateTime.now();
+
+        Token invalidToken = new Token(concertId, "INVALID-TOKEN");
+        assertThrows(InvalidTokenException.class, () ->
+                waitingQueueService.validate(invalidToken));
+
+
+
+        // 토큰 활성화 후 테스트
+        Token token = waitingQueueService.register(concertId, userId, now);
+        queueManager.activateTokensByTimeOrder(concertId, 1);
+        waitingQueueService.validate(token);
+        assertDoesNotThrow(()->waitingQueueService.validate(token));
+
+
+        // 토큰 비활성화 후 테스트
+        queueManager.expireTokensInActiveQueue(concertId, now.plusMinutes(30));
+        assertThrows(InvalidTokenException.class,
+                () -> waitingQueueService.validate(token));
+
+
+    }
 
 }

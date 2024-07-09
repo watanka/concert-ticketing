@@ -22,7 +22,7 @@ public class JedisActiveQueueManager implements ActiveTokenManager {
     @Override
     public void activate(Token token) {
         String keyName = ACTIVATED_KEYNAME + token.getConcertId();
-        jedis.zadd(keyName, token.getTimeScale(), token.getJwt());
+        jedis.zadd(keyName, token.convertToTimeScale(), token.getJwt());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class JedisActiveQueueManager implements ActiveTokenManager {
 
         long expireThresholdTime = now.minusSeconds(ACTIVE_TIME).toInstant(ZoneOffset.UTC).toEpochMilli();
 
-        jedis.zremrangeByScore(ACTIVATED_KEYNAME+concertId, "(" + expireThresholdTime, "+inf");
+        jedis.zremrangeByScore(ACTIVATED_KEYNAME+concertId, "-inf", "(" + expireThresholdTime);
     }
 
     @Override

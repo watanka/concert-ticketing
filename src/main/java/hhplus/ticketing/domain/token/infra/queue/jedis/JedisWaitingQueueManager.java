@@ -35,15 +35,15 @@ public class JedisWaitingQueueManager implements WaitingQueueManager {
         }
         long waitingNo = getWaitingNo(keyName, token);
 
-        return new WaitingInfo(token.getUserId(), waitingNo, token.getIssuedAt());
+        return new WaitingInfo(waitingNo, token.getIssuedAt());
     }
 
     @Override
     public WaitingInfo insertInWaitingQueue(Token token) {
         String keyName = WAITING_KEYNAME + token.getConcertId();
 
-        jedis.zadd(keyName, token.getTimeScale(), token.getJwt());
-        return new WaitingInfo(token.getUserId(), getWaitingNo(keyName, token), token.getIssuedAt());
+        jedis.zadd(keyName, token.convertToTimeScale(), token.getJwt());
+        return new WaitingInfo(getWaitingNo(keyName, token), token.getIssuedAt());
     }
 
     @Override

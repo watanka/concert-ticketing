@@ -42,11 +42,3 @@ public class PaymentFacade {
             return paymentTransaction;
         }
     }
-//
-//Ticket
-//long id;
-//Seat seat;
-//long userId;
-//long price;
-//TicketStatus status;
-//LocalDateTime reservedTime;

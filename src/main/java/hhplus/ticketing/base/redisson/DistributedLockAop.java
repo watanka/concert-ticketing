@@ -1,7 +1,5 @@
-package hhplus.ticketing.point.integration;
+package hhplus.ticketing.base.redisson;
 
-import hhplus.ticketing.api.point.facade.DistributedLock;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -34,12 +32,21 @@ public class DistributedLockAop {
         try{
             boolean available = rLock.tryLock(distributedLock.waitTime(), distributedLock.leaseTime(), distributedLock.timeUnit());
             if (!available) {
-                throw new InterruptedException();
+                return false;
             }
             return aopForTransaction.proceed(joinPoint);
-        } finally {
-            rLock.unlock();
+        } catch (InterruptedException e) {
+            throw new InterruptedException();
+        }finally {
+            try{
+                rLock.unlock();
+            } catch (IllegalMonitorStateException e){
+                throw new IllegalArgumentException();
+            }
+
         }
     }
+
+
 }
 

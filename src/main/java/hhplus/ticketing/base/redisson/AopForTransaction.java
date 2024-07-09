@@ -1,4 +1,4 @@
-package hhplus.ticketing.point.integration;
+package hhplus.ticketing.base.redisson;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;

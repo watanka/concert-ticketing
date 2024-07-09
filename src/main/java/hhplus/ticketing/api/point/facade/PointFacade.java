@@ -1,5 +1,6 @@
 package hhplus.ticketing.api.point.facade;
 
+import hhplus.ticketing.base.redisson.DistributedLock;
 import hhplus.ticketing.domain.point.components.PointService;
 import hhplus.ticketing.domain.point.models.Point;
 import hhplus.ticketing.domain.user.components.UserService;
@@ -18,7 +19,7 @@ public class PointFacade {
     @Autowired
     private final UserService userService;
 
-    @DistributedLock(key="#userId")
+    @DistributedLock(key="pointlock-user#userId")
     public void transact(long userId, Point point) {
         pointService.recordPointTransaction(userId, point, LocalDateTime.now());
         userService.updateBalance(userId, point);

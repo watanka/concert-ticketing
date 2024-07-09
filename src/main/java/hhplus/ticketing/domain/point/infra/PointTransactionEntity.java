@@ -30,10 +30,10 @@ public class PointTransactionEntity {
 
     public static PointTransactionEntity from(PointTransaction pointTransaction) {
         return PointTransactionEntity.builder()
-                .userId(pointTransaction.userId())
-                .transactionTime(pointTransaction.transactionTime())
-                .amount(pointTransaction.amount())
-                .type(pointTransaction.type())
+                .userId(pointTransaction.getUserId())
+                .transactionTime(pointTransaction.getTransactionTime())
+                .amount(pointTransaction.getAmount())
+                .type(pointTransaction.getType())
                 .build();
     }
 

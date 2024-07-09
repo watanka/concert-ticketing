@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -39,7 +40,7 @@ public class TokenJedisTest {
     }
 
     Token createToken(long userId, long concertId, String tokenClaim, LocalDateTime registerTime){
-        return new Token(concertId, tokenClaim, userId, registerTime);
+        return new Token(concertId, tokenClaim, registerTime);
     }
 
     @Test
@@ -100,7 +101,7 @@ public class TokenJedisTest {
         long concertId = 1L;
         long userId = 1L;
         LocalDateTime issuedAt = LocalDateTime.now();
-        LocalDateTime supposeExpiredTime = issuedAt.minusMinutes(10);
+        LocalDateTime supposeExpiredTime = issuedAt.plusMinutes(10);
 
         Token token = waitingQueueService.register(concertId, userId, issuedAt);
 

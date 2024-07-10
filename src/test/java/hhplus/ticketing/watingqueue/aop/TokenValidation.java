@@ -1,4 +1,4 @@
-package hhplus.ticketing.domain.token.components;
+package hhplus.ticketing.watingqueue.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

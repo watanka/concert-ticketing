@@ -6,11 +6,10 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record WaitingInfoResponse(long userId, long waitingNo, LocalDateTime issuedAt) {
+public record WaitingInfoResponse(long waitingNo, LocalDateTime issuedAt) {
 
     public static WaitingInfoResponse from(WaitingInfo waitingInfo){
         return WaitingInfoResponse.builder()
-                .userId(waitingInfo.userId())
                 .waitingNo(waitingInfo.waitingNo())
                 .issuedAt(waitingInfo.issuedAt())
                 .build();

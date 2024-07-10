@@ -35,4 +35,12 @@ public class WaitingQueueService {
     }
 
 
+    public void validate(Token token) throws InvalidTokenException {
+        boolean isValid = tokenManager.validate(token);
+        boolean isActive = queueManager.checkActive(token);
+        if (!isValid || !isActive) {
+            throw new InvalidTokenException();
+        }
+
+    }
 }

@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -39,13 +40,13 @@ public class TokenJedisTest {
     }
 
     Token createToken(long userId, long concertId, String tokenClaim, LocalDateTime registerTime){
-        return new Token(concertId, tokenClaim, userId, registerTime);
+        return new Token(concertId, tokenClaim, registerTime);
     }
 
     @Test
     @DisplayName("없는 토큰을 조회할 경우 예외 처리")
     void query_invalid_token(){
-        Token invalidToken = new Token(1, "INVALID-TOKEN", 1, LocalDateTime.now());
+        Token invalidToken = new Token(1, "INVALID-TOKEN",  LocalDateTime.now());
 
 
         assertThrows(InvalidTokenException.class, () ->
@@ -61,7 +62,7 @@ public class TokenJedisTest {
         Token token = waitingQueueService.register(1, userId, LocalDateTime.now());
         WaitingInfo waitingInfo = waitingQueueService.query(token);
 
-        assertThat(waitingInfo.userId()).isEqualTo(userId);
+        assertThat(waitingInfo.waitingNo()).isEqualTo(1);
     }
 
     @Test
@@ -100,7 +101,7 @@ public class TokenJedisTest {
         long concertId = 1L;
         long userId = 1L;
         LocalDateTime issuedAt = LocalDateTime.now();
-        LocalDateTime supposeExpiredTime = issuedAt.minusMinutes(10);
+        LocalDateTime supposeExpiredTime = issuedAt.plusMinutes(10);
 
         Token token = waitingQueueService.register(concertId, userId, issuedAt);
 
@@ -121,7 +122,6 @@ public class TokenJedisTest {
 
         WaitingInfo waitingInfo1 = queueManager.getWaitingInfoByToken(token1);
 
-        assertThat(waitingInfo1.userId()).isEqualTo(userId1);
         assertThat(waitingInfo1.waitingNo()).isEqualTo(1);
 
         long userId2=2;
@@ -130,7 +130,6 @@ public class TokenJedisTest {
 
         WaitingInfo waitingInfo2 = queueManager.getWaitingInfoByToken(token2);
 
-        assertThat(waitingInfo2.userId()).isEqualTo(userId2);
         assertThat(waitingInfo2.waitingNo()).isEqualTo(2);
     }
 
@@ -172,5 +171,52 @@ public class TokenJedisTest {
     }
 
 
+    @Test
+    @DisplayName("같은 아이디로 다시 토큰을 요청할 경우, 다시 대기해야한다.")
+    void request_token_two_times(){
+        long userId = 1;
+        long concertId = 1;
+        waitingQueueService.register(concertId, userId, LocalDateTime.now().minusMinutes(5));
+
+        int numOtherWaits = 30;
+        for (int i=2; i<numOtherWaits+2;i++ ) {
+            waitingQueueService.register(concertId, i, LocalDateTime.now());
+        }
+
+        Token tokenSecond = waitingQueueService.register(concertId, userId, LocalDateTime.now().plusSeconds(10));
+
+        WaitingInfo waitingInfoSecond = waitingQueueService.query(tokenSecond);
+
+        assertThat(waitingInfoSecond.waitingNo()).isNotEqualTo(1);
+    }
+
+
+    @Test
+    @DisplayName("토큰 활성화를 체크한다. JWT 유효성 + 토큰 활성화")
+    void validate_token(){
+        long concertId = 100;
+        long userId = 1;
+        LocalDateTime now = LocalDateTime.now();
+
+        Token invalidToken = new Token(concertId, "INVALID-TOKEN");
+        assertThrows(InvalidTokenException.class, () ->
+                waitingQueueService.validate(invalidToken));
+
+
+
+        // 토큰 활성화 후 테스트
+        Token token = waitingQueueService.register(concertId, userId, now);
+        queueManager.activateTokensByTimeOrder(concertId, 1);
+        waitingQueueService.validate(token);
+        assertDoesNotThrow(()->waitingQueueService.validate(token));
+
+
+        // 토큰 비활성화 후 테스트
+        queueManager.expireTokensInActiveQueue(concertId, now.plusMinutes(30));
+        assertThrows(InvalidTokenException.class,
+                () -> waitingQueueService.validate(token));
+
+
+    }
 
 }

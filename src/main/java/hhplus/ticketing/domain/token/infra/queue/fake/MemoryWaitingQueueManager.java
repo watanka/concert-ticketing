@@ -19,7 +19,7 @@ public class MemoryWaitingQueueManager implements WaitingQueueManager {
 
     @Override
     public WaitingInfo insertInWaitingQueue(Token token) {
-        WaitingInfo waitingInfo = new WaitingInfo(token.getUserId(), tokenMap.size()+1, token.getIssuedAt());
+        WaitingInfo waitingInfo = new WaitingInfo(tokenMap.size()+1, token.getIssuedAt());
         tokenMap.put(token.getJwt(), waitingInfo);
         return waitingInfo;
     }

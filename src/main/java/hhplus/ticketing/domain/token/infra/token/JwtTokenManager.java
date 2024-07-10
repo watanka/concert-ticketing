@@ -25,7 +25,7 @@ public class JwtTokenManager implements TokenManager {
                 .signWith(key)
                 .compact();
 
-        return new Token(concertId, jws, userId, issuedAt);
+        return new Token(concertId, jws, issuedAt);
     }
 
 

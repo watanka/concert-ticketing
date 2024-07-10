@@ -34,7 +34,7 @@ public class TokenTest {
     @Test
     @DisplayName("없는 토큰을 조회할 경우 예외 처리")
     void query_invalid_token(){
-        Token invalidToken = new Token(1, "INVALID-TOKEN", 1, LocalDateTime.now());
+        Token invalidToken = new Token(1, "INVALID-TOKEN", LocalDateTime.now());
         assertThrows(InvalidTokenException.class, () ->
                 waitingQueueService.query(invalidToken));
 
@@ -48,7 +48,7 @@ public class TokenTest {
         Token token = waitingQueueService.register(1, userId, LocalDateTime.now());
         WaitingInfo waitingInfo = waitingQueueService.query(token);
 
-        assertThat(waitingInfo.userId()).isEqualTo(userId);
+        assertThat(waitingInfo.waitingNo()).isEqualTo(1);
     }
 
     @Test

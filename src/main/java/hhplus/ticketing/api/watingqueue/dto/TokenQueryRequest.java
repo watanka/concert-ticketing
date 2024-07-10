@@ -1,4 +1,4 @@
-package hhplus.ticketing.api.watingqueue.controller;
+package hhplus.ticketing.api.watingqueue.dto;
 
 import hhplus.ticketing.domain.token.models.Token;
 import lombok.Builder;

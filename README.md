@@ -6,13 +6,10 @@
 - 테스트 기반 코드를 작성함으로써 안정성 있는 코드를 구현합니다.
 - 대용량 트래픽을 제어할 수 있는 대기열을 구현합니다.
 
-### TODO
-- [ ] 2024-07-02: 포인트 동시성처리 시에 DistributedLock을 구현했음에도 user balance의 결과가 누락됨.
-- [ ] 2024-07-03: 티켓예약(TicketService.register) 시, 예약가능 좌석인지 검증하는 로직을 현재는 Seat.status가 AVAILABLE인지 확인함. 이걸 티켓들 중 해당 (concertId, showTime, seatNo)가 있는지 조회하는 것을 변경해야함. 도메인 책임 분리 관점에서, 좌석의 예약 상태는 콘서트 도메인의 책임이 아님. 문제는 `isAvailable(Seat)` 로직이 동시성 처리에서 계속 잘못된 결과를 냄. 
-
 
 ### Getting Started
 ```bash
+docker-compose up
 ```
 
 ### API 문서
@@ -84,15 +81,3 @@
 ### 대기열 구현
 [대기열 구현](assets/docs/대기열구현.md)
 - 대용량 트래픽을 감당하기 위해 필요한 가벼운 DB와 보안을 위한 가벼운 인증 데이터 구조
-
-
-### 예외 처리
-
-### CI/CD 구성
-- Lint
-
-
-
-### 성능개선 사항
-- 캐쉬 적용
-
